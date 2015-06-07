@@ -8,12 +8,15 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.fivem.rts.ashley.RenderSystem;
-import com.fivem.rts.ashley.SizeComponent;
-import com.fivem.rts.ashley.TextureComponent;
-import com.fivem.rts.ashley.TransformComponent;
+import com.fivem.rts.component.MovementComponent;
+import com.fivem.rts.system.MovementSystem;
+import com.fivem.rts.system.RenderSystem;
+import com.fivem.rts.component.SizeComponent;
+import com.fivem.rts.component.TextureComponent;
+import com.fivem.rts.component.TransformComponent;
 
 public class SpaceRts extends ApplicationAdapter {
 
@@ -43,21 +46,26 @@ public class SpaceRts extends ApplicationAdapter {
     ashleyEngine = new Engine();
     RenderSystem renderSystem = new RenderSystem(camera);
     ashleyEngine.addSystem(renderSystem);
+    MovementSystem movementSystem = new MovementSystem();
+    ashleyEngine.addSystem(movementSystem);
 
     Entity entity = new Entity();
 
     TextureComponent texture = new TextureComponent();
     TransformComponent transform = new TransformComponent();
     SizeComponent size = new SizeComponent();
+    MovementComponent movement = new MovementComponent();
 
     texture.region = new TextureRegion(new Texture(Gdx.files.internal("badlogic.jpg")));
     size.width = 200;
     size.height = 200;
     transform.position.set(SCENE_WIDTH * .5f - size.width * .5f, SCENE_HEIGHT * .5f - size.height * .5f, 0);
+    movement.velocity = new Vector2(2, 2);
 
     entity.add(texture);
     entity.add(transform);
     entity.add(size);
+    entity.add(movement);
 
     ashleyEngine.addEntity(entity);
 

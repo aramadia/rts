@@ -1,9 +1,12 @@
-package com.fivem.rts.ashley;
+package com.fivem.rts.system;
 
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.fivem.rts.component.SizeComponent;
+import com.fivem.rts.component.TextureComponent;
+import com.fivem.rts.component.TransformComponent;
 
 public class RenderSystem extends EntitySystem {
   private ImmutableArray<Entity> entities;
