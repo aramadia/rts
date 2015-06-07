@@ -8,15 +8,14 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.fivem.rts.component.MovementComponent;
-import com.fivem.rts.system.MovementSystem;
-import com.fivem.rts.system.RenderSystem;
 import com.fivem.rts.component.SizeComponent;
 import com.fivem.rts.component.TextureComponent;
 import com.fivem.rts.component.TransformComponent;
+import com.fivem.rts.system.MovementSystem;
+import com.fivem.rts.system.RenderSystem;
 
 public class SpaceRts extends ApplicationAdapter {
 
@@ -60,7 +59,8 @@ public class SpaceRts extends ApplicationAdapter {
     size.width = 200;
     size.height = 200;
     transform.position.set(SCENE_WIDTH * .5f - size.width * .5f, SCENE_HEIGHT * .5f - size.height * .5f, 0);
-    movement.velocity = new Vector2(2, 2);
+    movement.velocity.set(10, 10);
+    movement.acceleration.set(30, 30);
 
     entity.add(texture);
     entity.add(transform);
