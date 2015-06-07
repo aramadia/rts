@@ -53,7 +53,7 @@ public class SpaceRts extends ApplicationAdapter {
     texture.region = new TextureRegion(new Texture(Gdx.files.internal("badlogic.jpg")));
     size.width = 200;
     size.height = 200;
-    transform.position.set(SCENE_WIDTH * .5f - size.width * .5f, SCENE_HEIGHT * .5f - size.height * .5f);
+    transform.position.set(SCENE_WIDTH * .5f - size.width * .5f, SCENE_HEIGHT * .5f - size.height * .5f, 0);
 
     entity.add(texture);
     entity.add(transform);
