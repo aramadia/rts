@@ -2,6 +2,7 @@ package com.fivem.rts;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -19,8 +20,8 @@ import com.fivem.rts.system.RenderSystem;
 
 public class SpaceRts extends ApplicationAdapter {
 
-  private static final float SCENE_WIDTH = 1280;
-  private static final float SCENE_HEIGHT = 720;
+  public static final float SCENE_WIDTH = 1280;
+  public static final float SCENE_HEIGHT = 720;
 
   private OrthographicCamera camera;
   private Viewport viewport;
