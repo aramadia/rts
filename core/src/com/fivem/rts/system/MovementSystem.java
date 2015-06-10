@@ -7,6 +7,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
+import com.fivem.rts.SpaceRts;
 import com.fivem.rts.component.MovementComponent;
 import com.fivem.rts.component.TransformComponent;
 
@@ -43,11 +44,24 @@ public class MovementSystem extends IteratingSystem {
       movement.acceleration.set(0, -acceleration);
     }
 
+    // Do classic bounce with walls
+    if (transform.position.x < 0 && movement.velocity.x < 0) {
+      movement.velocity.x *= -1;
+    }
+    if (transform.position.x > SpaceRts.SCENE_WIDTH && movement.velocity.x > 0) {
+      movement.velocity.x *= -1;
+    }
+
+    if (transform.position.y < 0 && movement.velocity.y < 0) {
+      movement.velocity.y *= -1;
+    }
+    if (transform.position.y > SpaceRts.SCENE_HEIGHT && movement.velocity.y > 0) {
+      movement.velocity.y *= -1;
+    }
+
     // apply acceleration
     tmp.set(movement.acceleration).scl(deltaTime);
     movement.velocity.add(tmp);
-
-
 
     // apply velocity
     tmp.set(movement.velocity).scl(deltaTime);

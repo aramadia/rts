@@ -49,26 +49,30 @@ public class SpaceRts extends ApplicationAdapter {
     MovementSystem movementSystem = new MovementSystem();
     ashleyEngine.addSystem(movementSystem);
 
-    Entity entity = new Entity();
+    for (int i = 0; i < 15; i++) {
+      Entity entity = new Entity();
 
-    TextureComponent texture = new TextureComponent();
-    TransformComponent transform = new TransformComponent();
-    SizeComponent size = new SizeComponent();
-    MovementComponent movement = new MovementComponent();
+      TextureComponent texture = new TextureComponent();
+      TransformComponent transform = new TransformComponent();
+      SizeComponent size = new SizeComponent();
+      MovementComponent movement = new MovementComponent();
 
-    texture.region = new TextureRegion(new Texture(Gdx.files.internal("badlogic.jpg")));
-    size.width = 200;
-    size.height = 200;
-    transform.position.set(SCENE_WIDTH * .5f - size.width * .5f, SCENE_HEIGHT * .5f - size.height * .5f, 0);
-    movement.velocity.set(10, 10);
-    movement.acceleration.set(30, 30);
+      texture.region = new TextureRegion(new Texture(Gdx.files.internal("badlogic.jpg")));
+      size.width = 100;
+      size.height = 100;
+      transform.position.set(SCENE_WIDTH * (float)Math.random() - size.width * .5f,
+              SCENE_HEIGHT * (float)Math.random() - size.height * .5f, 0);
+      movement.velocity.set(10, 10);
+      movement.acceleration.set(30, 30);
 
-    entity.add(texture);
-    entity.add(transform);
-    entity.add(size);
-    entity.add(movement);
+      entity.add(texture);
+      entity.add(transform);
+      entity.add(size);
+      entity.add(movement);
 
-    ashleyEngine.addEntity(entity);
+      ashleyEngine.addEntity(entity);
+
+    }
 
     renderSystem.addedToEngine(ashleyEngine);
   }
