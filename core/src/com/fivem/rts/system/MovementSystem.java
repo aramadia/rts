@@ -4,6 +4,8 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.fivem.rts.component.MovementComponent;
 import com.fivem.rts.component.TransformComponent;
@@ -27,9 +29,25 @@ public class MovementSystem extends IteratingSystem {
     MovementComponent movement = movementMapper.get(entity);
     TransformComponent transform = this.transformComponent.get(entity);
 
+    final int acceleration = 200;
+    if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+      movement.acceleration.set(-acceleration, 0);
+    }
+    if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+      movement.acceleration.set(acceleration,0);
+    }
+    if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+      movement.acceleration.set(0, acceleration);
+    }
+    if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+      movement.acceleration.set(0, -acceleration);
+    }
+
     // apply acceleration
     tmp.set(movement.acceleration).scl(deltaTime);
     movement.velocity.add(tmp);
+
+
 
     // apply velocity
     tmp.set(movement.velocity).scl(deltaTime);
