@@ -5,16 +5,15 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.fivem.rts.component.MovementComponent;
-import com.fivem.rts.component.SizeComponent;
-import com.fivem.rts.component.TextureComponent;
-import com.fivem.rts.component.TransformComponent;
+import com.fivem.rts.component.*;
 import com.fivem.rts.system.MovementSystem;
 import com.fivem.rts.system.RenderSystem;
 
@@ -56,6 +55,9 @@ public class SpaceRts extends ApplicationAdapter {
       TransformComponent transform = new TransformComponent();
       SizeComponent size = new SizeComponent();
       MovementComponent movement = new MovementComponent();
+      TextComponent text = new TextComponent();
+
+      text.text = "Entity" + i;
 
       texture.region = new TextureRegion(new Texture(Gdx.files.internal("badlogic.jpg")));
       size.width = 100;
@@ -69,9 +71,9 @@ public class SpaceRts extends ApplicationAdapter {
       entity.add(transform);
       entity.add(size);
       entity.add(movement);
+      entity.add(text);
 
       ashleyEngine.addEntity(entity);
-
     }
 
     renderSystem.addedToEngine(ashleyEngine);
