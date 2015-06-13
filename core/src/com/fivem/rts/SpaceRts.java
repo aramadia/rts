@@ -41,41 +41,38 @@ public class SpaceRts extends ApplicationAdapter {
     camera.update();
 
     ashleyEngine = new Engine();
-    RenderSystem renderSystem = new RenderSystem(camera);
-    ashleyEngine.addSystem(renderSystem);
     BoundsSystem boundsSystem = new BoundsSystem();
     ashleyEngine.addSystem(boundsSystem);
     MovementSystem movementSystem = new MovementSystem();
     ashleyEngine.addSystem(movementSystem);
+    RenderSystem renderSystem = new RenderSystem(camera);
+    ashleyEngine.addSystem(renderSystem);
 
     for (int i = 0; i < 15; i++) {
       Entity entity = new Entity();
 
       TextureComponent texture = new TextureComponent();
       TransformComponent transform = new TransformComponent();
-      SizeComponent size = new SizeComponent();
+      BoundsComponent bounds = new BoundsComponent();
       MovementComponent movement = new MovementComponent();
       TextComponent text = new TextComponent();
-      BoundsComponent boundsComponent = new BoundsComponent();
 
       int width = 100;
       int height = 100;
-      boundsComponent.bounds.setWidth(width);
-      boundsComponent.bounds.setHeight(height);
+      bounds.bounds.setWidth(width);
+      bounds.bounds.setHeight(height);
 
       text.text = "Entity" + i;
 
       texture.region = new TextureRegion(new Texture(Gdx.files.internal("badlogic.jpg")));
-      size.width = width;
-      size.height = height;
-      transform.position.set(SCENE_WIDTH * (float)Math.random() - size.width * .5f,
-              SCENE_HEIGHT * (float)Math.random() - size.height * .5f, 0);
+      transform.position.set(SCENE_WIDTH * (float)Math.random() - bounds.bounds.width * .5f,
+              SCENE_HEIGHT * (float)Math.random() - bounds.bounds.height * .5f, 0);
       movement.velocity.set(10, 10);
       movement.acceleration.set(30, 30);
 
       entity.add(texture);
       entity.add(transform);
-      entity.add(size);
+      entity.add(bounds);
       entity.add(movement);
       entity.add(text);
 

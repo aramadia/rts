@@ -6,10 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.fivem.rts.component.SizeComponent;
-import com.fivem.rts.component.TextComponent;
-import com.fivem.rts.component.TextureComponent;
-import com.fivem.rts.component.TransformComponent;
+import com.fivem.rts.component.*;
 
 public class RenderSystem extends EntitySystem {
 
@@ -22,7 +19,7 @@ public class RenderSystem extends EntitySystem {
   private ComponentMapper<TransformComponent> transformMapper = ComponentMapper.getFor(TransformComponent.class);
   private ComponentMapper<TextureComponent> textureMapper = ComponentMapper.getFor(TextureComponent.class);
   private ComponentMapper<TextComponent> textMapper = ComponentMapper.getFor(TextComponent.class);
-  private ComponentMapper<SizeComponent> sizeMapper = ComponentMapper.getFor(SizeComponent.class);
+  private ComponentMapper<BoundsComponent> boundsMapper = ComponentMapper.getFor(BoundsComponent.class);
 
 
   public RenderSystem(OrthographicCamera camera) {
@@ -37,7 +34,7 @@ public class RenderSystem extends EntitySystem {
       //noinspection unchecked
       entities = engine.getEntitiesFor(Family.all(
             TransformComponent.class,
-            SizeComponent.class)
+             BoundsComponent.class)
                     .one(TextureComponent.class, TextComponent.class)
       .get());
   }
@@ -55,13 +52,13 @@ public class RenderSystem extends EntitySystem {
       TransformComponent transform = transformMapper.get(e);
       TextureComponent texture = textureMapper.get(e);
       TextComponent text = textMapper.get(e);
-      SizeComponent size = sizeMapper.get(e);
+      BoundsComponent bounds = boundsMapper.get(e);
 
       if (texture != null) {
         batch.draw(texture.region,
             transform.position.x, transform.position.y,
-            size.width * .5f, size.height * .5f,
-            size.width, size.height,
+            bounds.bounds.width * .5f, bounds.bounds.height * .5f,
+            bounds.bounds.width, bounds.bounds.height,
             transform.scale.x, transform.scale.y,
             transform.rotation);
       }

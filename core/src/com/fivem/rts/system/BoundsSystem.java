@@ -22,11 +22,11 @@ public class BoundsSystem extends IteratingSystem {
 
   @Override
   protected void processEntity(Entity entity, float deltaTime) {
-    BoundsComponent boundsComponent = boundsMapper.get(entity);
-    TransformComponent transformComponent = transformMapper.get(entity);
+    BoundsComponent bounds = boundsMapper.get(entity);
+    TransformComponent transform = transformMapper.get(entity);
 
-    boundsComponent.bounds.x = transformComponent.position.x + boundsComponent.bounds.width * 0.5f;
-    boundsComponent.bounds.y = transformComponent.position.y + boundsComponent.bounds.height * 0.5f;
+    bounds.bounds.x = transform.position.x - bounds.bounds.width * 0.5f;
+    bounds.bounds.y = transform.position.y - bounds.bounds.height * 0.5f;
   }
 
 }
