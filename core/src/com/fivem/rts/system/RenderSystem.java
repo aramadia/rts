@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.fivem.rts.SpaceRts;
 import com.fivem.rts.component.*;
 
 public class RenderSystem extends EntitySystem {
@@ -92,12 +93,14 @@ public class RenderSystem extends EntitySystem {
     batch.end();
 
     // Needs to happen outside of batch drawing
-    for (Entity entity : entities) {
-      BoundsComponent bounds = boundsMapper.get(entity);
-      shapeRenderer.setColor(1f, 0f, 0f, 0.5f);
-      shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-      shapeRenderer.rect(bounds.bounds.x, bounds.bounds.y, bounds.bounds.width, bounds.bounds.height);
-      shapeRenderer.end();
+    if (SpaceRts.DEBUG_MODE) {
+      for (Entity entity : entities) {
+        BoundsComponent bounds = boundsMapper.get(entity);
+        shapeRenderer.setColor(1f, 0f, 0f, 0.5f);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.rect(bounds.bounds.x, bounds.bounds.y, bounds.bounds.width, bounds.bounds.height);
+        shapeRenderer.end();
+      }
     }
 
   }
