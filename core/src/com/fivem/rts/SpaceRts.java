@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -26,9 +27,12 @@ public class SpaceRts extends ApplicationAdapter {
   private Viewport viewport;
 
   private Engine ashleyEngine;
+  private FPSLogger fpsLogger;
 
   @Override
   public void create() {
+    fpsLogger = new FPSLogger();
+
     camera = new OrthographicCamera();
     viewport = new FitViewport(SCENE_WIDTH, SCENE_HEIGHT, camera);
 
@@ -69,14 +73,13 @@ public class SpaceRts extends ApplicationAdapter {
 
       int width = 100;
       int height = 100;
-      bounds.bounds.setWidth(width);
-      bounds.bounds.setHeight(height);
 
       text.text = "Entity" + i;
 
       texture.region = new TextureRegion(new Texture(Gdx.files.internal("badlogic.jpg")));
       transform.position.set(SCENE_WIDTH * (float)Math.random() - bounds.bounds.width * .5f,
               SCENE_HEIGHT * (float)Math.random() - bounds.bounds.height * .5f, 0);
+      bounds.bounds.set(transform.position.x - width * 0.5f, transform.position.y * 0.5f, width, height);
       movement.velocity.set(10, 10);
       movement.acceleration.set(30, 30);
 
@@ -100,6 +103,8 @@ public class SpaceRts extends ApplicationAdapter {
   public void render() {
     Gdx.gl.glClearColor(0, 0, 0, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+    fpsLogger.log();
 
     ashleyEngine.update(Gdx.graphics.getDeltaTime());
   }

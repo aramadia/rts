@@ -52,7 +52,7 @@ public class ShootingSystem extends IteratingSystem {
       BoundsComponent bBounds = new BoundsComponent();
       bTransform.position.set(transform.position);
       bMovement.velocity.set(gunner.bullet_speed * (float)Math.random(),gunner.bullet_speed * (float)Math.random());
-      bBounds.bounds.set(bTransform.position.x, bTransform.position.y, bParticle.size, bParticle.size);
+      bBounds.bounds.set(bTransform.position.x - bParticle.size * 0.5f, bTransform.position.y - bParticle.size * 0.5f, bParticle.size, bParticle.size);
       b.add(bTransform);
       b.add(bMovement);
       b.add(bParticle);
