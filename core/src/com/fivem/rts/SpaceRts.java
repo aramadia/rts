@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.fivem.rts.component.*;
 import com.fivem.rts.system.BoundsSystem;
+import com.fivem.rts.system.CollisionSystem;
 import com.fivem.rts.system.MovementSystem;
 import com.fivem.rts.system.RenderSystem;
 import com.fivem.rts.system.ShootingSystem;
@@ -42,16 +43,21 @@ public class SpaceRts extends ApplicationAdapter {
     camera.update();
 
     ashleyEngine = new Engine();
-    BoundsSystem boundsSystem = new BoundsSystem();
-    ashleyEngine.addSystem(boundsSystem);
-    MovementSystem movementSystem = new MovementSystem();
-    ashleyEngine.addSystem(movementSystem);
-    RenderSystem renderSystem = new RenderSystem(camera);
-    ashleyEngine.addSystem(renderSystem);
-    ShootingSystem shootingSystem = new ShootingSystem();
-    ashleyEngine.addSystem(shootingSystem);
 
-    for (int i = 0; i < 5; i++) {
+    MovementSystem movementSystem = new MovementSystem();
+    BoundsSystem boundsSystem = new BoundsSystem();
+    CollisionSystem collisionSystem = new CollisionSystem();
+    ShootingSystem shootingSystem = new ShootingSystem();
+    RenderSystem renderSystem = new RenderSystem(camera);
+
+    // Order matters
+    ashleyEngine.addSystem(movementSystem);
+    ashleyEngine.addSystem(boundsSystem);
+    ashleyEngine.addSystem(shootingSystem);
+    ashleyEngine.addSystem(collisionSystem);
+    ashleyEngine.addSystem(renderSystem);
+
+    for (int i = 0; i < 10; i++) {
       Entity entity = new Entity();
 
       TextureComponent texture = new TextureComponent();
@@ -86,6 +92,7 @@ public class SpaceRts extends ApplicationAdapter {
       ashleyEngine.addEntity(entity);
     }
 
+    collisionSystem.addedToEngine(ashleyEngine);
     renderSystem.addedToEngine(ashleyEngine);
   }
 
