@@ -83,7 +83,7 @@ public class RenderSystem extends EntitySystem {
             transform.rotation);
       }
 
-      if (text != null) {
+      if (text != null && SpaceRts.DEBUG_MODE) {
         font.draw(batch, text.text, x, y);
       }
 

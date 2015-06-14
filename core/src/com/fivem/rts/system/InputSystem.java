@@ -7,6 +7,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.fivem.rts.SpaceRts;
 import com.fivem.rts.component.MovementComponent;
+import com.fivem.rts.component.ParticleComponent;
 import com.fivem.rts.component.TransformComponent;
 
 public class InputSystem extends EntitySystem implements InputProcessor {
@@ -57,7 +58,8 @@ public class InputSystem extends EntitySystem implements InputProcessor {
 
   private void updateAcceleration(int xAcceleration, int yAcceleration) {
     ImmutableArray<Entity> entities =
-        engine.getEntitiesFor(Family.all(MovementComponent.class, TransformComponent.class).get());
+        engine.getEntitiesFor(Family.all(MovementComponent.class, TransformComponent.class)
+            .exclude(ParticleComponent.class).get());
 
     for (Entity entity : entities) {
       MovementComponent movement = movementMapper.get(entity);

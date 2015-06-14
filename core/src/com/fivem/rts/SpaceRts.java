@@ -57,7 +57,7 @@ public class SpaceRts extends ApplicationAdapter {
     ashleyEngine.addSystem(collisionSystem);
     ashleyEngine.addSystem(renderSystem);
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 5; i++) {
       Entity entity = new Entity();
 
       TextureComponent texture = new TextureComponent();
