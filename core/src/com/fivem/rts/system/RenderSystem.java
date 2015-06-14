@@ -2,7 +2,6 @@ package com.fivem.rts.system;
 
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -85,13 +84,21 @@ public class RenderSystem extends EntitySystem {
       if (particle != null) {
         shapeRenderer.setColor(Color.BLUE);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.circle(transform.position.x, transform.position.y, particle.size);
+        shapeRenderer.circle(transform.position.x, transform.position.y, particle.size * 0.5f);
         shapeRenderer.end();
-
-
       }
     }
 
     batch.end();
+
+    // Needs to happen outside of batch drawing
+    for (Entity entity : entities) {
+      BoundsComponent bounds = boundsMapper.get(entity);
+      shapeRenderer.setColor(1f, 0f, 0f, 0.5f);
+      shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+      shapeRenderer.rect(bounds.bounds.x, bounds.bounds.y, bounds.bounds.width, bounds.bounds.height);
+      shapeRenderer.end();
+    }
+
   }
 }
