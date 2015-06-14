@@ -35,15 +35,19 @@ public class InputSystem extends EntitySystem implements InputProcessor {
   public boolean keyDown(int keycode) {
     switch (keycode) {
       case Input.Keys.A:
+      case Input.Keys.DPAD_LEFT:
         updateAcceleration(-ACCELERATION, 0);
         return true;
       case Input.Keys.D:
+      case Input.Keys.DPAD_RIGHT:
         updateAcceleration(ACCELERATION, 0);
         return true;
       case Input.Keys.W:
+      case Input.Keys.DPAD_UP:
         updateAcceleration(0, ACCELERATION);
         return true;
       case Input.Keys.S:
+      case Input.Keys.DPAD_DOWN:
         updateAcceleration(0, -ACCELERATION);
         return true;
       case Input.Keys.Z:
