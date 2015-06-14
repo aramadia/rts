@@ -1,28 +1,67 @@
 package com.fivem.rts.system;
 
-import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.ashley.core.*;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.fivem.rts.SpaceRts;
+import com.fivem.rts.component.MovementComponent;
+import com.fivem.rts.component.TransformComponent;
 
 /**
  * Created by Joshua Lauer
  */
 public class InputSystem extends EntitySystem implements InputProcessor {
 
+  private static final int ACCELERATION = 200;
+
+  private final ComponentMapper<MovementComponent> movementMapper;
+
+  private Engine engine;
+
   public InputSystem() {
     Gdx.input.setInputProcessor(this);
+
+    movementMapper = ComponentMapper.getFor(MovementComponent.class);
+  }
+
+  @Override
+  public void addedToEngine(Engine engine) {
+    this.engine = engine;
   }
 
   @Override
   public boolean keyDown(int keycode) {
-    if (Input.Keys.Z == keycode) {
-      SpaceRts.DEBUG_MODE = !SpaceRts.DEBUG_MODE;
-      return true;
+    switch (keycode) {
+      case Input.Keys.A:
+        updateAcceleration(-ACCELERATION, 0);
+        return true;
+      case Input.Keys.D:
+        updateAcceleration(ACCELERATION, 0);
+        return true;
+      case Input.Keys.W:
+        updateAcceleration(0, ACCELERATION);
+        return true;
+      case Input.Keys.S:
+        updateAcceleration(0, -ACCELERATION);
+        return true;
+      case Input.Keys.Z:
+        SpaceRts.DEBUG_MODE = !SpaceRts.DEBUG_MODE;
+        return true;
     }
 
     return false;
+  }
+
+  private void updateAcceleration(int xAcceleration, int yAcceleration) {
+    ImmutableArray<Entity> entities =
+        engine.getEntitiesFor(Family.all(MovementComponent.class, TransformComponent.class).get());
+
+    for (Entity entity : entities) {
+      MovementComponent movement = movementMapper.get(entity);
+      movement.acceleration.set(xAcceleration, yAcceleration);
+    }
   }
 
   @Override
