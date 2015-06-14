@@ -2,24 +2,30 @@ package com.fivem.rts.system;
 
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.fivem.rts.component.*;
 
 public class RenderSystem extends EntitySystem {
+  private final static String TAG = "RenderSystem";
 
   private ImmutableArray<Entity> entities;
 
   private SpriteBatch batch;
   private BitmapFont font;
   private OrthographicCamera camera;
+  private ShapeRenderer shapeRenderer;
 
   private ComponentMapper<TransformComponent> transformMapper = ComponentMapper.getFor(TransformComponent.class);
   private ComponentMapper<TextureComponent> textureMapper = ComponentMapper.getFor(TextureComponent.class);
   private ComponentMapper<TextComponent> textMapper = ComponentMapper.getFor(TextComponent.class);
   private ComponentMapper<BoundsComponent> boundsMapper = ComponentMapper.getFor(BoundsComponent.class);
+  private ComponentMapper<ParticleComponent> particleMapper = ComponentMapper.getFor(ParticleComponent.class);
+
 
 
   public RenderSystem(OrthographicCamera camera) {
@@ -27,15 +33,16 @@ public class RenderSystem extends EntitySystem {
     this.camera = camera;
     this.font = new BitmapFont();
     this.font.setColor(Color.RED);
+
+    this.shapeRenderer = new ShapeRenderer();
   }
 
   @Override
   public void addedToEngine(Engine engine) {
       //noinspection unchecked
       entities = engine.getEntitiesFor(Family.all(
-            TransformComponent.class,
-             BoundsComponent.class)
-                    .one(TextureComponent.class, TextComponent.class)
+            TransformComponent.class, BoundsComponent.class)
+                    .one(TextureComponent.class, TextComponent.class, ParticleComponent.class)
       .get());
   }
 
@@ -53,6 +60,7 @@ public class RenderSystem extends EntitySystem {
       TextureComponent texture = textureMapper.get(e);
       TextComponent text = textMapper.get(e);
       BoundsComponent bounds = boundsMapper.get(e);
+      ParticleComponent particle = particleMapper.get(e);
 
       if (texture != null) {
         batch.draw(texture.region,
@@ -65,6 +73,15 @@ public class RenderSystem extends EntitySystem {
 
       if (text != null) {
         font.draw(batch, text.text, transform.position.x, transform.position.y);
+      }
+
+      if (particle != null) {
+        shapeRenderer.setColor(Color.BLUE);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.circle(transform.position.x, transform.position.y, particle.size);
+        shapeRenderer.end();
+
+
       }
     }
 

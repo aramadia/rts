@@ -14,6 +14,7 @@ import com.fivem.rts.component.*;
 import com.fivem.rts.system.BoundsSystem;
 import com.fivem.rts.system.MovementSystem;
 import com.fivem.rts.system.RenderSystem;
+import com.fivem.rts.system.ShootingSystem;
 
 public class SpaceRts extends ApplicationAdapter {
 
@@ -47,8 +48,10 @@ public class SpaceRts extends ApplicationAdapter {
     ashleyEngine.addSystem(movementSystem);
     RenderSystem renderSystem = new RenderSystem(camera);
     ashleyEngine.addSystem(renderSystem);
+    ShootingSystem shootingSystem = new ShootingSystem();
+    ashleyEngine.addSystem(shootingSystem);
 
-    for (int i = 0; i < 15; i++) {
+    for (int i = 0; i < 5; i++) {
       Entity entity = new Entity();
 
       TextureComponent texture = new TextureComponent();
@@ -56,6 +59,7 @@ public class SpaceRts extends ApplicationAdapter {
       BoundsComponent bounds = new BoundsComponent();
       MovementComponent movement = new MovementComponent();
       TextComponent text = new TextComponent();
+      GunnerComponent gunner = new GunnerComponent();
 
       int width = 100;
       int height = 100;
@@ -70,11 +74,14 @@ public class SpaceRts extends ApplicationAdapter {
       movement.velocity.set(10, 10);
       movement.acceleration.set(30, 30);
 
+      gunner.reload_progress = (float)Math.random() * gunner.reload_time;
+
       entity.add(texture);
       entity.add(transform);
       entity.add(bounds);
       entity.add(movement);
       entity.add(text);
+      entity.add(gunner);
 
       ashleyEngine.addEntity(entity);
     }
