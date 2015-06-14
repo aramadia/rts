@@ -2,6 +2,7 @@ package com.fivem.rts.system;
 
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.fivem.rts.SpaceRts;
 import com.fivem.rts.component.BoundsComponent;
 import com.fivem.rts.component.MovementComponent;
 
@@ -31,6 +32,23 @@ public class CollisionSystem extends EntitySystem {
       BoundsComponent bounds = boundsMapper.get(entity);
       MovementComponent movement = movementMapper.get(entity);
 
+      // Do classic bounce with walls
+      if (bounds.bounds.x < 0 && movement.velocity.x < 0) {
+        movement.velocity.x *= -1;
+      }
+      if (bounds.bounds.x + bounds.bounds.width > SpaceRts.SCENE_WIDTH && movement.velocity.x > 0) {
+        movement.velocity.x *= -1;
+      }
+
+      if (bounds.bounds.y < 0 && movement.velocity.y < 0) {
+        movement.velocity.y *= -1;
+      }
+      if (bounds.bounds.y + bounds.bounds.height > SpaceRts.SCENE_HEIGHT && movement.velocity.y > 0) {
+        movement.velocity.y *= -1;
+      }
+
+      // Collide with other entities
+      // For now just reverse velocity
       for (int j = i+1; j < entities.size(); ++j) {
         Entity otherEntity = entities.get(j);
         BoundsComponent otherEntityBounds = boundsMapper.get(otherEntity);

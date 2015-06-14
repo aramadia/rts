@@ -62,17 +62,24 @@ public class RenderSystem extends EntitySystem {
       BoundsComponent bounds = boundsMapper.get(e);
       ParticleComponent particle = particleMapper.get(e);
 
+      float x = transform.position.x;
+      float y = transform.position.y;
+
       if (texture != null) {
+        // TODO probably should not be using bounds for this
+        float originX = bounds.bounds.width * .5f;
+        float originY = bounds.bounds.height * .5f;
+
         batch.draw(texture.region,
-            transform.position.x, transform.position.y,
-            bounds.bounds.width * .5f, bounds.bounds.height * .5f,
+            x - originX, y - originY,
+            originX, originY,
             bounds.bounds.width, bounds.bounds.height,
             transform.scale.x, transform.scale.y,
             transform.rotation);
       }
 
       if (text != null) {
-        font.draw(batch, text.text, transform.position.x, transform.position.y);
+        font.draw(batch, text.text, x, y);
       }
 
       if (particle != null) {
