@@ -10,11 +10,12 @@ import com.fivem.rts.component.*;
 
 public class ShootingSystem extends IteratingSystem {
 
+  private final static String TAG = ShootingSystem.class.getSimpleName();
+
   private ComponentMapper<GunnerComponent> gunnerMapper;
   private ComponentMapper<TransformComponent> transformMapper;
-  private Engine engine;
 
-  private final static String TAG = "Shooting";
+  private Engine engine;
 
   public ShootingSystem() {
     super(Family.all(GunnerComponent.class).get());

@@ -8,7 +8,7 @@
 	<inherits name='com.badlogic.gdx.ai' />
 	<inherits name='com.badlogic.gdx.controllers.controllers-gwt' />
 
-	<inherits name='SpaceRTS' />
+	<inherits name='SpaceRts' />
 	<entry-point class='com.fivem.rts.client.HtmlLauncher' />
 	
 	<set-configuration-property name="gdx.assetpath" value="../android/assets" />

@@ -12,7 +12,7 @@ import com.fivem.rts.SpaceRts;
 import com.fivem.rts.component.*;
 
 public class RenderSystem extends EntitySystem {
-  private final static String TAG = "RenderSystem";
+  private final static String TAG = RenderSystem.class.getSimpleName();
 
   private ImmutableArray<Entity> entities;
 
