@@ -2,6 +2,7 @@ package com.fivem.rts.system;
 
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -52,6 +53,10 @@ public class RenderSystem extends EntitySystem {
 
     batch.begin();
     batch.setProjectionMatrix(camera.combined);
+
+    if (SpaceRts.DEBUG_MODE) {
+      font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 10, SpaceRts.SCENE_HEIGHT - 10);
+    }
 
     for (int i = 0; i < entities.size(); ++i) {
       Entity e = entities.get(i);

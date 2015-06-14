@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -25,12 +24,9 @@ public class SpaceRts extends ApplicationAdapter {
   private Viewport viewport;
 
   private Engine ashleyEngine;
-  private FPSLogger fpsLogger;
 
   @Override
   public void create() {
-    fpsLogger = new FPSLogger();
-
     camera = new OrthographicCamera();
     viewport = new FitViewport(SCENE_WIDTH, SCENE_HEIGHT, camera);
 
@@ -103,8 +99,6 @@ public class SpaceRts extends ApplicationAdapter {
   public void render() {
     Gdx.gl.glClearColor(0, 0, 0, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-    fpsLogger.log();
 
     ashleyEngine.update(Gdx.graphics.getDeltaTime());
   }
