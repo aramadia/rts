@@ -9,9 +9,6 @@ import com.fivem.rts.SpaceRts;
 import com.fivem.rts.component.MovementComponent;
 import com.fivem.rts.component.TransformComponent;
 
-/**
- * Created by Joshua Lauer
- */
 public class InputSystem extends EntitySystem implements InputProcessor {
 
   private static final int ACCELERATION = 200;
