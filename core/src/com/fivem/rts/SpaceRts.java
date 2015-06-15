@@ -57,7 +57,7 @@ public class SpaceRts extends ApplicationAdapter {
     ashleyEngine.addSystem(collisionSystem);
     ashleyEngine.addSystem(renderSystem);
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 10; i++) {
       Entity entity = new Entity();
 
       TextureComponent texture = new TextureComponent();
@@ -73,8 +73,8 @@ public class SpaceRts extends ApplicationAdapter {
       text.text = "Entity" + i;
 
       texture.region = new TextureRegion(new Texture(Gdx.files.internal("badlogic.jpg")));
-      transform.position.set(SCENE_WIDTH * (float)Math.random() - bounds.bounds.width * .5f,
-              SCENE_HEIGHT * (float)Math.random() - bounds.bounds.height * .5f, 0);
+      transform.position.set(SCENE_WIDTH * (float)Math.random() - bounds.bounds.width * .4f,
+              SCENE_HEIGHT * (float)Math.random() - bounds.bounds.height * .4f, 0);
       bounds.bounds.set(transform.position.x - width * 0.5f, transform.position.y * 0.5f, width, height);
       movement.velocity.set(10, 10);
       movement.acceleration.set(30, 30);
@@ -91,6 +91,7 @@ public class SpaceRts extends ApplicationAdapter {
       ashleyEngine.addEntity(entity);
     }
 
+    shootingSystem.addedToEngine(ashleyEngine);
     collisionSystem.addedToEngine(ashleyEngine);
     renderSystem.addedToEngine(ashleyEngine);
   }

@@ -41,10 +41,7 @@ public class RenderSystem extends EntitySystem {
   @Override
   public void addedToEngine(Engine engine) {
       //noinspection unchecked
-      entities = engine.getEntitiesFor(Family.all(
-            TransformComponent.class, BoundsComponent.class)
-                    .one(TextureComponent.class, TextComponent.class, ParticleComponent.class)
-      .get());
+      entities = engine.getEntitiesFor(Family.all(TransformComponent.class, BoundsComponent.class).get());
   }
 
   @Override
@@ -54,10 +51,6 @@ public class RenderSystem extends EntitySystem {
     batch.begin();
     batch.setProjectionMatrix(camera.combined);
 
-    if (SpaceRts.DEBUG_MODE) {
-      font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 10, SpaceRts.SCENE_HEIGHT - 10);
-    }
-
     for (int i = 0; i < entities.size(); ++i) {
       Entity e = entities.get(i);
 
@@ -65,7 +58,6 @@ public class RenderSystem extends EntitySystem {
       TextureComponent texture = textureMapper.get(e);
       TextComponent text = textMapper.get(e);
       BoundsComponent bounds = boundsMapper.get(e);
-      ParticleComponent particle = particleMapper.get(e);
 
       float x = transform.position.x;
       float y = transform.position.y;
@@ -87,25 +79,35 @@ public class RenderSystem extends EntitySystem {
         font.draw(batch, text.text, x, y);
       }
 
-      if (particle != null) {
-        shapeRenderer.setColor(Color.BLUE);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.circle(transform.position.x, transform.position.y, particle.size * 0.5f);
-        shapeRenderer.end();
-      }
+    }
+
+    if (SpaceRts.DEBUG_MODE) {
+      font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 10, SpaceRts.SCENE_HEIGHT - 10);
     }
 
     batch.end();
 
+    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+    for (Entity entity : entities) {
+      ParticleComponent particle = particleMapper.get(entity);
+      TransformComponent transform = transformMapper.get(entity);
+
+      if (particle != null) {
+        shapeRenderer.setColor(Color.BLUE);
+        shapeRenderer.circle(transform.position.x, transform.position.y, particle.size * 0.5f);
+      }
+    }
+    shapeRenderer.end();
+
     // Needs to happen outside of batch drawing
     if (SpaceRts.DEBUG_MODE) {
+      shapeRenderer.setColor(1f, 0f, 0f, 0.5f);
+      shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
       for (Entity entity : entities) {
         BoundsComponent bounds = boundsMapper.get(entity);
-        shapeRenderer.setColor(1f, 0f, 0f, 0.5f);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.rect(bounds.bounds.x, bounds.bounds.y, bounds.bounds.width, bounds.bounds.height);
-        shapeRenderer.end();
       }
+      shapeRenderer.end();
     }
 
   }

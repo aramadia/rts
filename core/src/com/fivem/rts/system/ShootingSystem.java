@@ -22,7 +22,6 @@ public class ShootingSystem extends IteratingSystem {
 
     transformMapper = ComponentMapper.getFor(TransformComponent.class);
     gunnerMapper = ComponentMapper.getFor(GunnerComponent.class);
-
   }
 
   @Override
