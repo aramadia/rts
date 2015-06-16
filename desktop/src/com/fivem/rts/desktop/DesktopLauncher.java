@@ -9,6 +9,6 @@ public class DesktopLauncher {
     LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
     config.width = (int)SpaceRts.SCENE_WIDTH;
     config.height = (int)SpaceRts.SCENE_HEIGHT;
-    new LwjglApplication(new SpaceRts(), config);
+    new LwjglApplication(new SpaceRts(new GoogleServicesDesktop()), config);
   }
 }

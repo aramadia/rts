@@ -25,8 +25,16 @@ public class SpaceRts extends ApplicationAdapter {
 
   private Engine ashleyEngine;
 
+  static GoogleServicesInterface googleServicesInterface;
+
+  public SpaceRts(GoogleServicesInterface googleServicesInterface){
+    this.googleServicesInterface = googleServicesInterface;
+  }
+
   @Override
   public void create() {
+    this.googleServicesInterface.signin();
+
     camera = new OrthographicCamera();
     viewport = new FitViewport(SCENE_WIDTH, SCENE_HEIGHT, camera);
 
