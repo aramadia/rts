@@ -87,6 +87,8 @@ public class RenderSystem extends EntitySystem {
 
     batch.end();
 
+    shapeRenderer.setProjectionMatrix(camera.combined);
+    
     shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
     for (Entity entity : entities) {
       ParticleComponent particle = particleMapper.get(entity);
@@ -103,7 +105,6 @@ public class RenderSystem extends EntitySystem {
     if (SpaceRts.DEBUG_MODE) {
       shapeRenderer.setColor(1f, 0f, 0f, 0.5f);
       shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-      shapeRenderer.setProjectionMatrix(camera.combined);
       for (Entity entity : entities) {
         BoundsComponent bounds = boundsMapper.get(entity);
         shapeRenderer.rect(bounds.bounds.x, bounds.bounds.y, bounds.bounds.width, bounds.bounds.height);
