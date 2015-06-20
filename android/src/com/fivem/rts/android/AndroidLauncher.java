@@ -20,16 +20,13 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
     gameHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);
     gameHelper.enableDebugLog(false);
 
-    GameHelper.GameHelperListener gameHelperListener = new GameHelper.GameHelperListener()
-    {
+    GameHelper.GameHelperListener gameHelperListener = new GameHelper.GameHelperListener() {
       @Override
-      public void onSignInSucceeded()
-      {
+      public void onSignInSucceeded() {
       }
 
       @Override
-      public void onSignInFailed()
-      {
+      public void onSignInFailed() {
       }
     };
 

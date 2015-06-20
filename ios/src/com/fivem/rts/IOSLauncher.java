@@ -9,7 +9,20 @@ public class IOSLauncher extends IOSApplication.Delegate {
   @Override
   protected IOSApplication createApplication() {
     IOSApplicationConfiguration config = new IOSApplicationConfiguration();
-    return new IOSApplication(new SpaceRts(), config);
+
+    GoogleServicesInterface googleServicesInterface = new GoogleServicesInterface() {
+      @Override
+      public void signin() {
+
+      }
+
+      @Override
+      public void signout() {
+
+      }
+    };
+
+    return new IOSApplication(new SpaceRts(googleServicesInterface), config);
   }
 
   public static void main(String[] argv) {
