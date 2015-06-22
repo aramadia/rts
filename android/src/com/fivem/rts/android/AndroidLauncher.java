@@ -6,8 +6,11 @@ import android.view.WindowManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.badlogic.gdx.utils.Json;
 import com.fivem.rts.GoogleServicesInterface;
+import com.fivem.rts.MoveCommand;
 import com.fivem.rts.SpaceRtsGame;
+import com.fivem.rts.network.NetworkManager;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesStatusCodes;
 import com.google.android.gms.games.multiplayer.Participant;
@@ -18,21 +21,23 @@ import java.util.ArrayList;
 
 
 public class AndroidLauncher extends AndroidApplication implements GoogleServicesInterface, RoomUpdateListener,
-        RealTimeMessageReceivedListener {
+        RealTimeMessageReceivedListener, NetworkManager {
 
   private static final String TAG = "AndroidImpl";
   GameHelper gameHelper;
 
   String roomId;
   String myParticipantId;
-  private ArrayList<Participant> participants;
+  private ArrayList<Participant> participants = new ArrayList<Participant>();
+  Json json = new Json();
+  MoveCommand curCommand;
 
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-    initialize(new SpaceRtsGame(this), config);
+    initialize(new SpaceRtsGame(this, this), config);
 
     gameHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);
     gameHelper.enableDebugLog(true);
@@ -62,6 +67,10 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
   @Override
   protected void onStop() {
     super.onStop();
+
+    Gdx.app.log(TAG, "leaving room");
+    Games.RealTimeMultiplayer.leave(gameHelper.getApiClient(), this, roomId);
+
     gameHelper.onStop();
   }
 
@@ -82,6 +91,10 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
 
   }
 
+  public void error(String msg, int statusCode) {
+
+  }
+
   @Override
   public void onRoomCreated(int statusCode, Room room) {
     if (statusCode != GamesStatusCodes.STATUS_OK) {
@@ -89,9 +102,12 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
       getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
       // show error message, return to main screen.
+      Gdx.app.error(TAG, "onRoomCreated " + GamesStatusCodes.getStatusString(statusCode));
+      return;
     }
 
-    Gdx.app.log(TAG, "onRoomCreated!");
+    roomId = room.getRoomId();
+    Gdx.app.log(TAG, "onRoomCreated "+ room.getRoomId());
 
   }
 
@@ -102,9 +118,10 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
       getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
       // show error message, return to main screen.
+      Gdx.app.error(TAG, "onJoinedRoom" + statusCode);
     }
 
-    Gdx.app.log(TAG, "onJoinedRoom: This means the client joined but still waiting for more players");
+    Gdx.app.log(TAG, "onJoinedRoom: " + room.getRoomId() + " This means the client joined but still waiting for more players");
   }
 
   @Override
@@ -117,7 +134,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
       Gdx.app.error(TAG, "onRoomConnected" + statusCode);
     }
 
-    Gdx.app.log(TAG, "Everyone connected to room, lets start the game");
+    Gdx.app.log(TAG, "Everyone connected to room " + room.getRoomId() + " lets start the game");
 
 
     roomId = room.getRoomId();
@@ -126,8 +143,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
 
     Gdx.app.log(TAG, "My participant Id " + myParticipantId);
 
-    String msg = "Hi, I connected to the room " + myParticipantId;
-    broadcastMessage(msg.getBytes());
+//    String msg = "Hi, I connected to the room " + myParticipantId;
+    //broadcastMessage(msg.getBytes());
   }
 
   @Override
@@ -171,22 +188,44 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
 
   @Override
   public void onRealTimeMessageReceived(RealTimeMessage rtm) {
-    receiveMessage(rtm.getSenderParticipantId(), rtm.getMessageData());
+    Gdx.app.log(TAG, "onRealTimeMessageReceived");
+
+        receiveMessage(rtm.getSenderParticipantId(), rtm.getMessageData());
   }
 
   @Override
   public void receiveMessage(String playerId, byte[] message) {
     String s = new String(message);
     Gdx.app.log(TAG, "received " + s + " from " + playerId);
+
+
+    curCommand = json.fromJson(MoveCommand.class, s);
   }
 
   @Override
   public void broadcastMessage(byte[] message) {
     for (Participant p : participants) {
+      Gdx.app.log(TAG, myParticipantId + " sending to " + p.getParticipantId());
         Games.RealTimeMultiplayer.sendReliableMessage(gameHelper.getApiClient(), null, message,
                 roomId, p.getParticipantId());
     }
   }
 
+  @Override
+  public MoveCommand receiveCommand() {
+    MoveCommand temp = curCommand;
+    curCommand = null;
+    return temp;
+  }
+
+  @Override
+  public void sendCommand(MoveCommand moveCommand) {
+    if (moveCommand == null) {
+      return;
+    }
+    String serializedCommand = json.toJson(moveCommand);
+    Gdx.app.log(TAG, "Sending command " + serializedCommand);
+    broadcastMessage(serializedCommand.getBytes());
+  }
 }
 

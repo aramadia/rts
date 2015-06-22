@@ -1,6 +1,7 @@
-package com.fivem.rts;
+package com.fivem.rts.network;
 
 import com.badlogic.gdx.utils.Json;
+import com.fivem.rts.MoveCommand;
 
 public class JsonMockNetworkManager implements NetworkManager {
 

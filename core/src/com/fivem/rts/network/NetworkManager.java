@@ -1,4 +1,6 @@
-package com.fivem.rts;
+package com.fivem.rts.network;
+
+import com.fivem.rts.MoveCommand;
 
 public interface NetworkManager {
 

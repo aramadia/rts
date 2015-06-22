@@ -8,10 +8,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.fivem.rts.component.*;
+import com.fivem.rts.network.JsonMockNetworkManager;
+import com.fivem.rts.network.NetworkManager;
 import com.fivem.rts.system.*;
 
 public class SpaceRtsGame extends ApplicationAdapter {
@@ -29,8 +30,11 @@ public class SpaceRtsGame extends ApplicationAdapter {
   static GoogleServicesInterface googleServicesInterface;
   private CommandManager commandManager;
 
-  public SpaceRtsGame(GoogleServicesInterface googleServicesInterface){
+  private NetworkManager networkManager;
+
+  public SpaceRtsGame(GoogleServicesInterface googleServicesInterface, NetworkManager networkManager){
     this.googleServicesInterface = googleServicesInterface;
+    this.networkManager = networkManager;
   }
 
   @Override
@@ -51,7 +55,7 @@ public class SpaceRtsGame extends ApplicationAdapter {
     camera.update();
 
     ashleyEngine = new Engine();
-    commandManager = new CommandManager(new JsonMockNetworkManager());
+    commandManager = new CommandManager(this.networkManager);
 
     CommandReadSystem commandReadSystem = new CommandReadSystem(commandManager);
     InputSystem inputSystem = new InputSystem(camera, commandManager);

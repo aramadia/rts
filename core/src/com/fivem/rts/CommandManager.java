@@ -1,5 +1,7 @@
 package com.fivem.rts;
 
+import com.fivem.rts.network.NetworkManager;
+
 public class CommandManager {
 
   private NetworkManager networkManager;
@@ -19,6 +21,7 @@ public class CommandManager {
 
   public void sendCommands() {
     networkManager.sendCommand(command);
+    command = null;
   }
 
 }
