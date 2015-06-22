@@ -10,6 +10,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
+import com.fivem.rts.CommandManager;
+import com.fivem.rts.MoveCommand;
 import com.fivem.rts.SpaceRtsGame;
 import com.fivem.rts.component.*;
 
@@ -18,14 +20,16 @@ public class InputSystem extends EntitySystem implements InputProcessor {
   private static final int ACCELERATION = 200;
 
   private final OrthographicCamera camera;
+  private final CommandManager commandManager;
 
   private Engine engine;
 
-  public InputSystem(OrthographicCamera camera) {
+  public InputSystem(OrthographicCamera camera, CommandManager commandManager
+  ) {
     Gdx.input.setInputProcessor(this);
 
     this.camera = camera;
-
+    this.commandManager = commandManager;
   }
 
   @Override
@@ -109,15 +113,18 @@ public class InputSystem extends EntitySystem implements InputProcessor {
     }
 
     boolean actionTaken = false;
+    MoveCommand moveCommand = new MoveCommand(pos.x, pos.y);
     // No entities clicked - attempt to move entities there if relevant
-    for (Entity selectableEntity : selectableEntities) {
-      SelectionComponent selection = selectableEntity.getComponent(SelectionComponent.class);
+    for (Entity entity : selectableEntities) {
+      SelectionComponent selection = entity.getComponent(SelectionComponent.class);
       if (selection.selected) {
-        DestinationComponent destination = new DestinationComponent();
-        destination.position.set(pos.x, pos.y);
-        selectableEntity.add(destination);
+        moveCommand.addEntityUuid(entity.getId());
         actionTaken = true;
       }
+    }
+
+    if (moveCommand.entityUuids.size != 0) {
+      commandManager.addCommand(moveCommand);
     }
 
     return actionTaken;

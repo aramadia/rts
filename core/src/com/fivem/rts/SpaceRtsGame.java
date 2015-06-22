@@ -26,6 +26,7 @@ public class SpaceRtsGame extends ApplicationAdapter {
   private Engine ashleyEngine;
 
   static GoogleServicesInterface googleServicesInterface;
+  private CommandManager commandManager;
 
   public SpaceRtsGame(GoogleServicesInterface googleServicesInterface){
     this.googleServicesInterface = googleServicesInterface;
@@ -49,30 +50,37 @@ public class SpaceRtsGame extends ApplicationAdapter {
     camera.update();
 
     ashleyEngine = new Engine();
+    commandManager = new CommandManager();
 
-    InputSystem inputSystem = new InputSystem(camera);
+    CommandReadSystem commandReadSystem = new CommandReadSystem(commandManager);
+    InputSystem inputSystem = new InputSystem(camera, commandManager);
     MovementSystem movementSystem = new MovementSystem();
     BoundsSystem boundsSystem = new BoundsSystem();
     CollisionSystem collisionSystem = new CollisionSystem();
     ShootingSystem shootingSystem = new ShootingSystem();
     RenderSystem renderSystem = new RenderSystem(camera);
+    CommandWriteSystem commandWriteSystem = new CommandWriteSystem(commandManager);
 
     // Order matters
+    ashleyEngine.addSystem(commandReadSystem);
     ashleyEngine.addSystem(inputSystem);
     ashleyEngine.addSystem(movementSystem);
     ashleyEngine.addSystem(boundsSystem);
     ashleyEngine.addSystem(shootingSystem);
     ashleyEngine.addSystem(collisionSystem);
     ashleyEngine.addSystem(renderSystem);
+    ashleyEngine.addSystem(commandWriteSystem);
 
     for (int i = 0; i < 2; i++) {
       Entity entity = createSmileyEntity(i);
       ashleyEngine.addEntity(entity);
     }
 
+    commandReadSystem.addedToEngine(ashleyEngine);
     shootingSystem.addedToEngine(ashleyEngine);
     collisionSystem.addedToEngine(ashleyEngine);
     renderSystem.addedToEngine(ashleyEngine);
+    commandWriteSystem.addedToEngine(ashleyEngine);
   }
 
   private Entity createSmileyEntity(int i) {
