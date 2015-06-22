@@ -14,8 +14,6 @@ public class InputSystem extends EntitySystem implements InputProcessor {
 
   private static final int ACCELERATION = 200;
 
-  private final ComponentMapper<MovementComponent> movementMapper;
-  private final ComponentMapper<SelectionComponent> selectionMapper;
   private final OrthographicCamera camera;
 
   private Engine engine;
@@ -25,8 +23,6 @@ public class InputSystem extends EntitySystem implements InputProcessor {
 
     this.camera = camera;
 
-    movementMapper = ComponentMapper.getFor(MovementComponent.class);
-    selectionMapper = ComponentMapper.getFor(SelectionComponent.class);
   }
 
   @Override
@@ -67,8 +63,7 @@ public class InputSystem extends EntitySystem implements InputProcessor {
             .exclude(ParticleComponent.class).get());
 
     for (Entity entity : entities) {
-      MovementComponent movement = movementMapper.get(entity);
-      movement.acceleration.set(xAcceleration, yAcceleration);
+      entity.getComponent(MovementComponent.class).acceleration.set(xAcceleration, yAcceleration);
     }
   }
 

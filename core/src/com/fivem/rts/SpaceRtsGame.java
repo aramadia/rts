@@ -65,8 +65,14 @@ public class SpaceRtsGame extends ApplicationAdapter {
     ashleyEngine.addSystem(collisionSystem);
     ashleyEngine.addSystem(renderSystem);
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 2; i++) {
       Entity entity = createSmileyEntity(i);
+
+      if (i == 1) {
+        DestinationComponent component = new DestinationComponent();
+        component.destination.set(300, 300);
+        entity.add(component);
+      }
       ashleyEngine.addEntity(entity);
     }
 
