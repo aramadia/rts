@@ -15,6 +15,7 @@ public class RenderSystem extends EntitySystem {
   private final static String TAG = RenderSystem.class.getSimpleName();
 
   private ImmutableArray<Entity> entities;
+  private ImmutableArray<Entity> selectedEntites;
 
   private SpriteBatch batch;
   private BitmapFont font;
@@ -26,8 +27,7 @@ public class RenderSystem extends EntitySystem {
   private ComponentMapper<TextComponent> textMapper = ComponentMapper.getFor(TextComponent.class);
   private ComponentMapper<BoundsComponent> boundsMapper = ComponentMapper.getFor(BoundsComponent.class);
   private ComponentMapper<ParticleComponent> particleMapper = ComponentMapper.getFor(ParticleComponent.class);
-
-
+  private ComponentMapper<SelectionComponent> selectedMapper = ComponentMapper.getFor(SelectionComponent.class);
 
   public RenderSystem(OrthographicCamera camera) {
     this.batch = new SpriteBatch();
@@ -40,8 +40,10 @@ public class RenderSystem extends EntitySystem {
 
   @Override
   public void addedToEngine(Engine engine) {
-      //noinspection unchecked
-      entities = engine.getEntitiesFor(Family.all(TransformComponent.class, BoundsComponent.class).get());
+    //noinspection unchecked
+    entities = engine.getEntitiesFor(Family.all(TransformComponent.class, BoundsComponent.class).get());
+    selectedEntites = engine.getEntitiesFor(
+        Family.all(TransformComponent.class, BoundsComponent.class, SelectionComponent.class).get());
   }
 
   @Override
@@ -78,7 +80,6 @@ public class RenderSystem extends EntitySystem {
       if (text != null && SpaceRts.DEBUG_MODE) {
         font.draw(batch, text.text, x, y);
       }
-
     }
 
     if (SpaceRts.DEBUG_MODE) {
@@ -88,7 +89,7 @@ public class RenderSystem extends EntitySystem {
     batch.end();
 
     shapeRenderer.setProjectionMatrix(camera.combined);
-    
+
     shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
     for (Entity entity : entities) {
       ParticleComponent particle = particleMapper.get(entity);
@@ -97,6 +98,18 @@ public class RenderSystem extends EntitySystem {
       if (particle != null) {
         shapeRenderer.setColor(Color.BLUE);
         shapeRenderer.circle(transform.position.x, transform.position.y, particle.size * 0.5f);
+      }
+    }
+    shapeRenderer.end();
+
+    Gdx.gl.glLineWidth(3 / camera.zoom);
+    shapeRenderer.setColor(0f, 1f, 0f, 0.5f);
+    shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+    for (Entity entity : selectedEntites) {
+      SelectionComponent selection = selectedMapper.get(entity);
+      if (selection.selected) {
+        BoundsComponent bounds = boundsMapper.get(entity);
+        shapeRenderer.rect(bounds.bounds.x, bounds.bounds.y, bounds.bounds.width, bounds.bounds.height);
       }
     }
     shapeRenderer.end();

@@ -66,42 +66,52 @@ public class SpaceRts extends ApplicationAdapter {
     ashleyEngine.addSystem(renderSystem);
 
     for (int i = 0; i < 10; i++) {
-      Entity entity = new Entity();
-
-      TextureComponent texture = new TextureComponent();
-      TransformComponent transform = new TransformComponent();
-      BoundsComponent bounds = new BoundsComponent();
-      MovementComponent movement = new MovementComponent();
-      TextComponent text = new TextComponent();
-      GunnerComponent gunner = new GunnerComponent();
-
-      int width = 100;
-      int height = 100;
-
-      text.text = "Entity" + i;
-
-      texture.region = new TextureRegion(new Texture(Gdx.files.internal("badlogic.jpg")));
-      transform.position.set(SCENE_WIDTH * (float)Math.random() - bounds.bounds.width * .4f,
-              SCENE_HEIGHT * (float)Math.random() - bounds.bounds.height * .4f, 0);
-      bounds.bounds.set(transform.position.x - width * 0.5f, transform.position.y * 0.5f, width, height);
-      movement.velocity.set(10, 10);
-      movement.acceleration.set(30, 30);
-
-      gunner.reload_progress = (float)Math.random() * gunner.reload_time;
-
-      entity.add(texture);
-      entity.add(transform);
-      entity.add(bounds);
-      entity.add(movement);
-      entity.add(text);
-      entity.add(gunner);
-
+      Entity entity = createSmileyEntity(i);
+      if (i == 5) {
+        entity.getComponent(SelectionComponent.class).selected = true;
+      }
       ashleyEngine.addEntity(entity);
     }
 
     shootingSystem.addedToEngine(ashleyEngine);
     collisionSystem.addedToEngine(ashleyEngine);
     renderSystem.addedToEngine(ashleyEngine);
+  }
+
+  private Entity createSmileyEntity(int i) {
+    Entity entity = new Entity();
+
+    TextureComponent texture = new TextureComponent();
+    TransformComponent transform = new TransformComponent();
+    BoundsComponent bounds = new BoundsComponent();
+    MovementComponent movement = new MovementComponent();
+    TextComponent text = new TextComponent();
+    GunnerComponent gunner = new GunnerComponent();
+    SelectionComponent selection = new SelectionComponent();
+
+    int width = 100;
+    int height = 100;
+
+    text.text = "Entity" + i;
+
+    texture.region = new TextureRegion(new Texture(Gdx.files.internal("badlogic.jpg")));
+    transform.position.set(SCENE_WIDTH * (float)Math.random() - bounds.bounds.width * .4f,
+            SCENE_HEIGHT * (float)Math.random() - bounds.bounds.height * .4f, 0);
+    bounds.bounds.set(transform.position.x - width * 0.5f, transform.position.y * 0.5f, width, height);
+    movement.velocity.set(10, 10);
+    movement.acceleration.set(30, 30);
+
+    gunner.reload_progress = (float)Math.random() * gunner.reload_time;
+
+    entity.add(texture);
+    entity.add(transform);
+    entity.add(bounds);
+    entity.add(movement);
+    entity.add(text);
+    entity.add(gunner);
+    entity.add(selection);
+
+    return entity;
   }
 
   @Override
