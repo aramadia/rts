@@ -28,6 +28,7 @@ public class RenderSystem extends EntitySystem {
   private ComponentMapper<BoundsComponent> boundsMapper = ComponentMapper.getFor(BoundsComponent.class);
   private ComponentMapper<ParticleComponent> particleMapper = ComponentMapper.getFor(ParticleComponent.class);
   private ComponentMapper<SelectionComponent> selectedMapper = ComponentMapper.getFor(SelectionComponent.class);
+  private ComponentMapper<DestinationComponent> destinationMapper = ComponentMapper.getFor(DestinationComponent.class);
 
   public RenderSystem(OrthographicCamera camera) {
     this.batch = new SpriteBatch();
@@ -94,11 +95,19 @@ public class RenderSystem extends EntitySystem {
     for (Entity entity : entities) {
       ParticleComponent particle = particleMapper.get(entity);
       TransformComponent transform = transformMapper.get(entity);
+      DestinationComponent destination = destinationMapper.get(entity);
+
+      if (destination != null) {
+        shapeRenderer.setColor(Color.GREEN);
+        shapeRenderer.circle(destination.position.x, destination.position.y, 5f);
+      }
 
       if (particle != null) {
         shapeRenderer.setColor(Color.BLUE);
         shapeRenderer.circle(transform.position.x, transform.position.y, particle.size * 0.5f);
       }
+
+
     }
     shapeRenderer.end();
 

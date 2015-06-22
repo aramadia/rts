@@ -34,21 +34,21 @@ public class MovementSystem extends IteratingSystem {
 
     if (destination != null) {
       // dumb movement at static speed towards target
-      if (destination.destination.x < transform.position.x) {
+      if (destination.position.x < transform.position.x) {
         movement.acceleration.x = -100;
       } else {
         movement.acceleration.x = 100;
       }
 
-      if (destination.destination.y < transform.position.y) {
+      if (destination.position.y < transform.position.y) {
         movement.acceleration.y = -100;
       } else {
         movement.acceleration.y = 100;
       }
 
 
-      float x = Math.abs(transform.position.x - destination.destination.x);
-      float y = Math.abs(transform.position.y - destination.destination.y);
+      float x = Math.abs(transform.position.x - destination.position.x);
+      float y = Math.abs(transform.position.y - destination.position.y);
       if (x < ACCURACY) {
         movement.acceleration.x = 0;
         movement.velocity.x = 0;

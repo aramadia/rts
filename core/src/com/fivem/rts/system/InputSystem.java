@@ -101,7 +101,7 @@ public class InputSystem extends EntitySystem implements InputProcessor {
       SelectionComponent selection = selectableEntity.getComponent(SelectionComponent.class);
       if (selection.selected) {
         DestinationComponent destination = new DestinationComponent();
-        destination.destination.set(pos.x, pos.y);
+        destination.position.set(pos.x, pos.y);
         selectableEntity.add(destination);
         actionTaken = true;
       }
