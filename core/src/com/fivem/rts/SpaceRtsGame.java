@@ -51,7 +51,7 @@ public class SpaceRtsGame extends ApplicationAdapter {
     camera.update();
 
     ashleyEngine = new Engine();
-    commandManager = new CommandManager(new CommandManager.NetworkManager(new Json()));
+    commandManager = new CommandManager(new JsonMockNetworkManager());
 
     CommandReadSystem commandReadSystem = new CommandReadSystem(commandManager);
     InputSystem inputSystem = new InputSystem(camera, commandManager);
