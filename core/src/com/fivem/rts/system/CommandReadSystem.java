@@ -28,21 +28,21 @@ public class CommandReadSystem extends EntitySystem {
   public void update(float deltaTime) {
     // TODO take time into account
 
-    for (MoveCommand moveCommand : commandManager.getCommands()) {
-      // process commands
-      System.out.println("moveCommand = " + moveCommand);
+    MoveCommand moveCommand = commandManager.getCommand();
+    if (moveCommand == null) {
+      return;
+    }
 
-      ImmutableArray<Entity> selectableEntities = engine.getEntitiesFor(Family.all(SelectionComponent.class).get());
-      for (Entity entity : selectableEntities) {
-        if (!moveCommand.entityUuids.contains(entity.getId(), true)) {
-          continue;
-        }
-        SelectionComponent selection = entity.getComponent(SelectionComponent.class);
-        if (selection.selected) {
-          DestinationComponent destination = new DestinationComponent();
-          destination.position.set(moveCommand.destination.x, moveCommand.destination.y);
-          entity.add(destination);
-        }
+    ImmutableArray<Entity> selectableEntities = engine.getEntitiesFor(Family.all(SelectionComponent.class).get());
+    for (Entity entity : selectableEntities) {
+      if (!moveCommand.entityUuids.contains(entity.getId(), true)) {
+        continue;
+      }
+      SelectionComponent selection = entity.getComponent(SelectionComponent.class);
+      if (selection.selected) {
+        DestinationComponent destination = new DestinationComponent();
+        destination.position.set(moveCommand.destination.x, moveCommand.destination.y);
+        entity.add(destination);
       }
     }
   }

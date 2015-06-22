@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.fivem.rts.component.*;
@@ -50,7 +51,7 @@ public class SpaceRtsGame extends ApplicationAdapter {
     camera.update();
 
     ashleyEngine = new Engine();
-    commandManager = new CommandManager();
+    commandManager = new CommandManager(new CommandManager.NetworkManager(new Json()));
 
     CommandReadSystem commandReadSystem = new CommandReadSystem(commandManager);
     InputSystem inputSystem = new InputSystem(camera, commandManager);

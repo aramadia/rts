@@ -1,28 +1,51 @@
 package com.fivem.rts;
 
-import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
 
 public class CommandManager {
 
-  private Array<MoveCommand> commands = new Array<MoveCommand>();
+  private NetworkManager networkManager;
+  private MoveCommand command;
 
-  public void addCommand(MoveCommand command) {
-    commands.add(command);
+  public CommandManager(NetworkManager networkManager) {
+    this.networkManager = networkManager;
   }
 
-  public ImmutableArray<MoveCommand> getCommands() {
-    // TODO read from network
-    ImmutableArray<MoveCommand> moveCommands = new ImmutableArray<MoveCommand>(commands);
-    commands = new Array<MoveCommand>();
-//    commands.clear();
-    return moveCommands;
+  public void addCommand(MoveCommand command) {
+    this.command = command;
+  }
+
+  public MoveCommand getCommand() {
+    return networkManager.receiveCommand();
   }
 
   public void sendCommands() {
-    for (MoveCommand command : commands) {
-      System.out.println("sending command = " + command);
-    }
-    // TODO write to network
+    networkManager.sendCommand(command);
   }
+
+  public static class NetworkManager {
+
+    private Json json;
+
+    public NetworkManager(Json json) {
+      this.json = json;
+    }
+
+    private String serializedCommand;
+
+    public MoveCommand receiveCommand() {
+      if (serializedCommand != null) {
+        return json.fromJson(MoveCommand.class, serializedCommand);
+      }
+
+      return null;
+    }
+
+    public void sendCommand(MoveCommand moveCommand) {
+      serializedCommand = json.toJson(moveCommand);
+    }
+
+  }
+
+
 }

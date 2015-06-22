@@ -113,7 +113,8 @@ public class InputSystem extends EntitySystem implements InputProcessor {
     }
 
     boolean actionTaken = false;
-    MoveCommand moveCommand = new MoveCommand(pos.x, pos.y);
+    MoveCommand moveCommand = new MoveCommand();
+    moveCommand.setDestination(pos.x, pos.y);
     // No entities clicked - attempt to move entities there if relevant
     for (Entity entity : selectableEntities) {
       SelectionComponent selection = entity.getComponent(SelectionComponent.class);
