@@ -20,6 +20,21 @@ public class IOSLauncher extends IOSApplication.Delegate {
       public void signout() {
 
       }
+
+      @Override
+      public void automatch() {
+
+      }
+
+      @Override
+      public void broadcastMessage(byte[] message) {
+
+      }
+
+      @Override
+      public void receiveMessage(String playerId, byte[] message) {
+
+      }
     };
 
     return new IOSApplication(new SpaceRts(googleServicesInterface), config);
