@@ -1,0 +1,19 @@
+package com.fivem.rts;
+
+// Do not need to encode sender as its incldued by the
+// network layer
+
+message Command {
+
+  optional TextMessage text_message = 1;
+  optional PingMessage ping_message = 2;
+
+}
+
+message TextMessage {
+  optional string text = 1;
+}
+
+message PingMessage {
+  optional int32 num = 1;
+}
