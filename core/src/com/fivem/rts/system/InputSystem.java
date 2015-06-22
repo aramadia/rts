@@ -1,6 +1,9 @@
 package com.fivem.rts.system;
 
-import com.badlogic.ashley.core.*;
+import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -92,7 +95,19 @@ public class InputSystem extends EntitySystem implements InputProcessor {
       }
     }
 
-    return false;
+    boolean actionTaken = false;
+    // No entities clicked - attempt to move entities there if relevant
+    for (Entity selectableEntity : selectableEntities) {
+      SelectionComponent selection = selectableEntity.getComponent(SelectionComponent.class);
+      if (selection.selected) {
+        DestinationComponent destination = new DestinationComponent();
+        destination.destination.set(pos.x, pos.y);
+        selectableEntity.add(destination);
+        actionTaken = true;
+      }
+    }
+
+    return actionTaken;
   }
 
   @Override
