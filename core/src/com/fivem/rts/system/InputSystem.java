@@ -55,9 +55,22 @@ public class InputSystem extends EntitySystem implements InputProcessor {
       case Input.Keys.Z:
         SpaceRtsGame.DEBUG_MODE = !SpaceRtsGame.DEBUG_MODE;
         return true;
+      case Input.Keys.ESCAPE:
+        unselectAllUnits();
+        return true;
     }
 
     return false;
+  }
+
+  private void unselectAllUnits() {
+    ImmutableArray<Entity> selectableEntites = engine.getEntitiesFor(Family.all(SelectionComponent.class).get());
+    for (Entity entity : selectableEntites) {
+      SelectionComponent selection = entity.getComponent(SelectionComponent.class);
+      if (selection.selected) {
+        selection.selected = false;
+      }
+    }
   }
 
   private void updateAcceleration(int xAcceleration, int yAcceleration) {
