@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.fivem.rts.SpaceRts;
+import com.fivem.rts.SpaceRtsGame;
 import com.fivem.rts.component.*;
 
 public class RenderSystem extends EntitySystem {
@@ -77,13 +77,13 @@ public class RenderSystem extends EntitySystem {
             transform.rotation);
       }
 
-      if (text != null && SpaceRts.DEBUG_MODE) {
+      if (text != null && SpaceRtsGame.DEBUG_MODE) {
         font.draw(batch, text.text, x, y);
       }
     }
 
-    if (SpaceRts.DEBUG_MODE) {
-      font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 10, SpaceRts.SCENE_HEIGHT - 10);
+    if (SpaceRtsGame.DEBUG_MODE) {
+      font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 10, SpaceRtsGame.SCENE_HEIGHT - 10);
     }
 
     batch.end();
@@ -115,7 +115,7 @@ public class RenderSystem extends EntitySystem {
     shapeRenderer.end();
 
     // Needs to happen outside of batch drawing
-    if (SpaceRts.DEBUG_MODE) {
+    if (SpaceRtsGame.DEBUG_MODE) {
       shapeRenderer.setColor(1f, 0f, 0f, 0.5f);
       shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
       for (Entity entity : entities) {

@@ -5,7 +5,7 @@ import android.os.Bundle;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.fivem.rts.GoogleServicesInterface;
-import com.fivem.rts.SpaceRts;
+import com.fivem.rts.SpaceRtsGame;
 import com.google.example.games.basegameutils.GameHelper;
 
 public class AndroidLauncher extends AndroidApplication implements GoogleServicesInterface {
@@ -15,7 +15,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-    initialize(new SpaceRts(this), config);
+    initialize(new SpaceRtsGame(this), config);
 
     gameHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);
     gameHelper.enableDebugLog(true);

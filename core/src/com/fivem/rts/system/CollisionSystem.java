@@ -2,7 +2,7 @@ package com.fivem.rts.system;
 
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.fivem.rts.SpaceRts;
+import com.fivem.rts.SpaceRtsGame;
 import com.fivem.rts.component.BoundsComponent;
 import com.fivem.rts.component.MovementComponent;
 
@@ -36,14 +36,14 @@ public class CollisionSystem extends EntitySystem {
       if (bounds.bounds.x < 0 && movement.velocity.x < 0) {
         movement.velocity.x *= -1;
       }
-      if (bounds.bounds.x + bounds.bounds.width > SpaceRts.SCENE_WIDTH && movement.velocity.x > 0) {
+      if (bounds.bounds.x + bounds.bounds.width > SpaceRtsGame.SCENE_WIDTH && movement.velocity.x > 0) {
         movement.velocity.x *= -1;
       }
 
       if (bounds.bounds.y < 0 && movement.velocity.y < 0) {
         movement.velocity.y *= -1;
       }
-      if (bounds.bounds.y + bounds.bounds.height > SpaceRts.SCENE_HEIGHT && movement.velocity.y > 0) {
+      if (bounds.bounds.y + bounds.bounds.height > SpaceRtsGame.SCENE_HEIGHT && movement.velocity.y > 0) {
         movement.velocity.y *= -1;
       }
 

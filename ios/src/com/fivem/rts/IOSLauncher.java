@@ -22,7 +22,7 @@ public class IOSLauncher extends IOSApplication.Delegate {
       }
     };
 
-    return new IOSApplication(new SpaceRts(googleServicesInterface), config);
+    return new IOSApplication(new SpaceRtsGame(googleServicesInterface), config);
   }
 
   public static void main(String[] argv) {

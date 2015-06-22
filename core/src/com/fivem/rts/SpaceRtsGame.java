@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.fivem.rts.component.*;
 import com.fivem.rts.system.*;
 
-public class SpaceRts extends ApplicationAdapter {
+public class SpaceRtsGame extends ApplicationAdapter {
 
   public static boolean DEBUG_MODE = false;
 
@@ -27,7 +27,7 @@ public class SpaceRts extends ApplicationAdapter {
 
   static GoogleServicesInterface googleServicesInterface;
 
-  public SpaceRts(GoogleServicesInterface googleServicesInterface){
+  public SpaceRtsGame(GoogleServicesInterface googleServicesInterface){
     this.googleServicesInterface = googleServicesInterface;
   }
 
@@ -50,7 +50,7 @@ public class SpaceRts extends ApplicationAdapter {
 
     ashleyEngine = new Engine();
 
-    InputSystem inputSystem = new InputSystem();
+    InputSystem inputSystem = new InputSystem(camera);
     MovementSystem movementSystem = new MovementSystem();
     BoundsSystem boundsSystem = new BoundsSystem();
     CollisionSystem collisionSystem = new CollisionSystem();
@@ -67,9 +67,6 @@ public class SpaceRts extends ApplicationAdapter {
 
     for (int i = 0; i < 10; i++) {
       Entity entity = createSmileyEntity(i);
-      if (i == 5) {
-        entity.getComponent(SelectionComponent.class).selected = true;
-      }
       ashleyEngine.addEntity(entity);
     }
 

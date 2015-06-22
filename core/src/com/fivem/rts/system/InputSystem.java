@@ -5,23 +5,28 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.fivem.rts.SpaceRts;
-import com.fivem.rts.component.MovementComponent;
-import com.fivem.rts.component.ParticleComponent;
-import com.fivem.rts.component.TransformComponent;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector3;
+import com.fivem.rts.SpaceRtsGame;
+import com.fivem.rts.component.*;
 
 public class InputSystem extends EntitySystem implements InputProcessor {
 
   private static final int ACCELERATION = 200;
 
   private final ComponentMapper<MovementComponent> movementMapper;
+  private final ComponentMapper<SelectionComponent> selectionMapper;
+  private final OrthographicCamera camera;
 
   private Engine engine;
 
-  public InputSystem() {
+  public InputSystem(OrthographicCamera camera) {
     Gdx.input.setInputProcessor(this);
 
+    this.camera = camera;
+
     movementMapper = ComponentMapper.getFor(MovementComponent.class);
+    selectionMapper = ComponentMapper.getFor(SelectionComponent.class);
   }
 
   @Override
@@ -49,7 +54,7 @@ public class InputSystem extends EntitySystem implements InputProcessor {
         updateAcceleration(0, -ACCELERATION);
         return true;
       case Input.Keys.Z:
-        SpaceRts.DEBUG_MODE = !SpaceRts.DEBUG_MODE;
+        SpaceRtsGame.DEBUG_MODE = !SpaceRtsGame.DEBUG_MODE;
         return true;
     }
 
@@ -79,6 +84,19 @@ public class InputSystem extends EntitySystem implements InputProcessor {
 
   @Override
   public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+    Vector3 pos = camera.unproject(new Vector3(screenX, screenY, 0));
+
+    ImmutableArray<Entity> selectableEntities =
+        engine.getEntitiesFor(Family.all(SelectionComponent.class, BoundsComponent.class).get());
+
+    for (Entity selectableEntity : selectableEntities) {
+      if (selectableEntity.getComponent(BoundsComponent.class).bounds.contains(pos.x, pos.y)) {
+        SelectionComponent selection = selectableEntity.getComponent(SelectionComponent.class);
+        selection.selected = !selection.selected;
+        return true;
+      }
+    }
+
     return false;
   }
 
