@@ -12,4 +12,19 @@ public class GoogleServicesDesktop implements GoogleServicesInterface {
   public void signout() {
 
   }
+
+  @Override
+  public void automatch() {
+
+  }
+
+  @Override
+  public void broadcastMessage(byte[] message) {
+
+  }
+
+  @Override
+  public void receiveMessage(String playerId, byte[] message) {
+
+  }
 }
