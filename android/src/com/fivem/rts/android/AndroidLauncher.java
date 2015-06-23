@@ -17,6 +17,7 @@ import com.google.android.gms.games.multiplayer.Participant;
 import com.google.android.gms.games.multiplayer.realtime.*;
 import com.google.example.games.basegameutils.GameHelper;
 
+
 import java.util.ArrayList;
 
 
@@ -30,7 +31,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
   String myParticipantId;
   private ArrayList<Participant> participants = new ArrayList<Participant>();
   Json json = new Json();
-  MoveCommand curCommand;
+  private ArrayList<MoveCommand> queuedCommands = new ArrayList<MoveCommand>();
 
 
   @Override
@@ -134,7 +135,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
       Gdx.app.error(TAG, "onRoomConnected" + statusCode);
     }
 
-    Gdx.app.log(TAG, "Everyone connected to room " + room.getRoomId() + " lets start the game");
+    Gdx.app.log(TAG, "Starting game with room <" + room.getRoomId() + ">");
 
 
     roomId = room.getRoomId();
@@ -188,9 +189,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
 
   @Override
   public void onRealTimeMessageReceived(RealTimeMessage rtm) {
-    Gdx.app.log(TAG, "onRealTimeMessageReceived");
-
-        receiveMessage(rtm.getSenderParticipantId(), rtm.getMessageData());
+    receiveMessage(rtm.getSenderParticipantId(), rtm.getMessageData());
   }
 
   @Override
@@ -198,23 +197,24 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
     String s = new String(message);
     Gdx.app.log(TAG, "received " + s + " from " + playerId);
 
-
-    curCommand = json.fromJson(MoveCommand.class, s);
+    queuedCommands.add(json.fromJson(MoveCommand.class, s));
   }
 
   @Override
   public void broadcastMessage(byte[] message) {
     for (Participant p : participants) {
-      Gdx.app.log(TAG, myParticipantId + " sending to " + p.getParticipantId());
+//      if (!p.getParticipantId().equals(myParticipantId)) {
+        Gdx.app.log(TAG, myParticipantId + " sending to " + p.getParticipantId());
         Games.RealTimeMultiplayer.sendReliableMessage(gameHelper.getApiClient(), null, message,
-                roomId, p.getParticipantId());
+            roomId, p.getParticipantId());
+//      }
     }
   }
 
   @Override
-  public MoveCommand receiveCommand() {
-    MoveCommand temp = curCommand;
-    curCommand = null;
+  public ArrayList<MoveCommand> receiveCommands() {
+    ArrayList<MoveCommand> temp = new ArrayList<MoveCommand>(queuedCommands);
+    queuedCommands.clear();
     return temp;
   }
 
@@ -226,6 +226,9 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
     String serializedCommand = json.toJson(moveCommand);
     Gdx.app.log(TAG, "Sending command " + serializedCommand);
     broadcastMessage(serializedCommand.getBytes());
+
+    // Since you don't get broadcasted messagses, add it to the queue here.
+    queuedCommands.add(moveCommand);
   }
 }
 

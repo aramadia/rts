@@ -2,6 +2,8 @@ package com.fivem.rts;
 
 import com.fivem.rts.network.NetworkManager;
 
+import java.util.ArrayList;
+
 public class CommandManager {
 
   private NetworkManager networkManager;
@@ -15,8 +17,8 @@ public class CommandManager {
     this.command = command;
   }
 
-  public MoveCommand getCommand() {
-    return networkManager.receiveCommand();
+  public ArrayList<MoveCommand> getCommands() {
+    return networkManager.receiveCommands();
   }
 
   public void sendCommands() {

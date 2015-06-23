@@ -5,10 +5,13 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
 import com.fivem.rts.CommandManager;
 import com.fivem.rts.MoveCommand;
 import com.fivem.rts.component.DestinationComponent;
 import com.fivem.rts.component.SelectionComponent;
+
+import java.util.ArrayList;
 
 public class CommandReadSystem extends EntitySystem {
 
@@ -28,21 +31,25 @@ public class CommandReadSystem extends EntitySystem {
   public void update(float deltaTime) {
     // TODO take time into account
 
-    MoveCommand moveCommand = commandManager.getCommand();
-    if (moveCommand == null) {
-      return;
-    }
+    ArrayList<MoveCommand> commands = commandManager.getCommands();
 
-    ImmutableArray<Entity> selectableEntities = engine.getEntitiesFor(Family.all(SelectionComponent.class).get());
-    for (Entity entity : selectableEntities) {
-      if (!moveCommand.entityUuids.contains(entity.getId(), true)) {
-        continue;
+    for (MoveCommand moveCommand: commands) {
+      Gdx.app.log("Command", "Running: " + moveCommand.toString());
+      if (moveCommand == null) {
+        return;
       }
-      SelectionComponent selection = entity.getComponent(SelectionComponent.class);
-      if (selection.selected) {
-        DestinationComponent destination = new DestinationComponent();
-        destination.position.set(moveCommand.destination.x, moveCommand.destination.y);
-        entity.add(destination);
+
+      ImmutableArray<Entity> selectableEntities = engine.getEntitiesFor(Family.all(SelectionComponent.class).get());
+      for (Entity entity : selectableEntities) {
+        if (!moveCommand.entityUuids.contains(entity.getId(), true)) {
+          continue;
+        }
+        SelectionComponent selection = entity.getComponent(SelectionComponent.class);
+        if (selection.selected) {
+          DestinationComponent destination = new DestinationComponent();
+          destination.position.set(moveCommand.destination.x, moveCommand.destination.y);
+          entity.add(destination);
+        }
       }
     }
   }

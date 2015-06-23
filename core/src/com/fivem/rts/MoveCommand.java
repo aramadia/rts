@@ -24,4 +24,9 @@ public class MoveCommand {
   public void addEntityUuid(long uuid) {
     entityUuids.add(uuid);
   }
+
+  @Override
+  public String toString() {
+    return "Ships: " + entityUuids.toString() + " move to " + destination.toString();
+  }
 }

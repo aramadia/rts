@@ -3,20 +3,25 @@ package com.fivem.rts.network;
 import com.badlogic.gdx.utils.Json;
 import com.fivem.rts.MoveCommand;
 
+import java.util.ArrayList;
+
 public class JsonMockNetworkManager implements NetworkManager {
 
   private Json json = new Json();
 
   private String serializedCommand;
 
-  public MoveCommand receiveCommand() {
+  @Override
+  public ArrayList<MoveCommand> receiveCommands() {
+    ArrayList<MoveCommand> commands = new ArrayList<MoveCommand>();
     if (serializedCommand != null) {
-      return json.fromJson(MoveCommand.class, serializedCommand);
+      commands.add(json.fromJson(MoveCommand.class, serializedCommand));
     }
 
-    return null;
+    return commands;
   }
 
+  @Override
   public void sendCommand(MoveCommand moveCommand) {
     serializedCommand = json.toJson(moveCommand);
   }
