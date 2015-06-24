@@ -84,12 +84,6 @@ public class SpaceRtsGame extends ApplicationAdapter {
       Entity entity = createSmileyEntity(i);
       ashleyEngine.addEntity(entity);
     }
-
-    commandReadSystem.addedToEngine(ashleyEngine);
-    shootingSystem.addedToEngine(ashleyEngine);
-    collisionSystem.addedToEngine(ashleyEngine);
-    renderSystem.addedToEngine(ashleyEngine);
-    commandWriteSystem.addedToEngine(ashleyEngine);
   }
 
   private Entity createSmileyEntity(int i) {
