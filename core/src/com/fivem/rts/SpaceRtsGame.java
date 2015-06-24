@@ -7,11 +7,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.fivem.rts.component.*;
-import com.fivem.rts.network.JsonMockNetworkManager;
 import com.fivem.rts.network.NetworkManager;
 import com.fivem.rts.system.*;
 
@@ -19,26 +20,31 @@ import java.util.Random;
 
 public class SpaceRtsGame extends ApplicationAdapter {
 
+  // TODO this shit should be moved somewhere
   public static boolean DEBUG_MODE = false;
+  public static boolean CONSOLE_ENABLED = false;
 
   public static final float SCENE_WIDTH = 1280;
   public static final float SCENE_HEIGHT = 720;
 
   private OrthographicCamera camera;
+  private OrthographicCamera cameraHud;
+
   private Viewport viewport;
+  private Viewport viewportHud;
 
   private Engine ashleyEngine;
 
   static GoogleServicesInterface googleServicesInterface;
   private CommandManager commandManager;
-
   private NetworkManager networkManager;
   public static Random random;
+  private SpriteBatch spriteBatch;
 
   public SpaceRtsGame(GoogleServicesInterface googleServicesInterface, NetworkManager networkManager){
     this.googleServicesInterface = googleServicesInterface;
     this.networkManager = networkManager;
-    this.random = new Random(1245);
+    this.random = new Random(79);
   }
 
   @Override
@@ -46,7 +52,9 @@ public class SpaceRtsGame extends ApplicationAdapter {
     this.googleServicesInterface.signin();
 
     camera = new OrthographicCamera();
+    cameraHud = new OrthographicCamera();
     viewport = new FitViewport(SCENE_WIDTH, SCENE_HEIGHT, camera);
+    viewportHud = new FillViewport(SCENE_WIDTH, SCENE_HEIGHT, cameraHud);
 
     // Center camera
     viewport.getCamera().position.set(
@@ -58,6 +66,8 @@ public class SpaceRtsGame extends ApplicationAdapter {
     viewport.update((int) SCENE_WIDTH, (int) SCENE_HEIGHT);
     camera.update();
 
+    spriteBatch = new SpriteBatch();
+
     ashleyEngine = new Engine();
     commandManager = new CommandManager(this.networkManager);
 
@@ -65,11 +75,12 @@ public class SpaceRtsGame extends ApplicationAdapter {
     InputSystem inputSystem = new InputSystem(camera, commandManager);
     MovementSystem movementSystem = new MovementSystem();
     BoundsSystem boundsSystem = new BoundsSystem();
-    CollisionSystem collisionSystem = new CollisionSystem();
     ShootingSystem shootingSystem = new ShootingSystem();
-    RenderSystem renderSystem = new RenderSystem(camera);
-    CommandWriteSystem commandWriteSystem = new CommandWriteSystem(commandManager);
+    CollisionSystem collisionSystem = new CollisionSystem();
     ParticleSystem particleSystem = new ParticleSystem();
+    RenderSystem renderSystem = new RenderSystem(camera, spriteBatch);
+    ConsoleSystem consoleSystem = new ConsoleSystem(viewportHud);
+    CommandWriteSystem commandWriteSystem = new CommandWriteSystem(commandManager);
 
     // Order matters
     ashleyEngine.addSystem(commandReadSystem);
@@ -80,6 +91,7 @@ public class SpaceRtsGame extends ApplicationAdapter {
     ashleyEngine.addSystem(collisionSystem);
     ashleyEngine.addSystem(particleSystem);
     ashleyEngine.addSystem(renderSystem);
+    ashleyEngine.addSystem(consoleSystem);
     ashleyEngine.addSystem(commandWriteSystem);
 
     for (int i = 0; i < 2; i++) {

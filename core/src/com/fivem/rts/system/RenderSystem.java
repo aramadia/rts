@@ -30,8 +30,8 @@ public class RenderSystem extends EntitySystem {
   private ComponentMapper<SelectionComponent> selectedMapper = ComponentMapper.getFor(SelectionComponent.class);
   private ComponentMapper<DestinationComponent> destinationMapper = ComponentMapper.getFor(DestinationComponent.class);
 
-  public RenderSystem(OrthographicCamera camera) {
-    this.batch = new SpriteBatch();
+  public RenderSystem(OrthographicCamera camera, SpriteBatch spriteBatch) {
+    this.batch = spriteBatch;
     this.camera = camera;
     this.font = new BitmapFont();
     this.font.setColor(Color.RED);

@@ -24,8 +24,7 @@ public class InputSystem extends EntitySystem implements InputProcessor {
 
   private Engine engine;
 
-  public InputSystem(OrthographicCamera camera, CommandManager commandManager
-  ) {
+  public InputSystem(OrthographicCamera camera, CommandManager commandManager) {
     Gdx.input.setInputProcessor(this);
 
     this.camera = camera;
@@ -58,6 +57,9 @@ public class InputSystem extends EntitySystem implements InputProcessor {
         return true;
       case Input.Keys.Z:
         SpaceRtsGame.DEBUG_MODE = !SpaceRtsGame.DEBUG_MODE;
+        return true;
+      case Input.Keys.TAB:
+        SpaceRtsGame.CONSOLE_ENABLED = !SpaceRtsGame.CONSOLE_ENABLED;
         return true;
       case Input.Keys.ESCAPE:
         unselectAllUnits();
