@@ -15,6 +15,8 @@ import com.fivem.rts.network.JsonMockNetworkManager;
 import com.fivem.rts.network.NetworkManager;
 import com.fivem.rts.system.*;
 
+import java.util.Random;
+
 public class SpaceRtsGame extends ApplicationAdapter {
 
   public static boolean DEBUG_MODE = false;
@@ -31,10 +33,12 @@ public class SpaceRtsGame extends ApplicationAdapter {
   private CommandManager commandManager;
 
   private NetworkManager networkManager;
+  public static Random random;
 
   public SpaceRtsGame(GoogleServicesInterface googleServicesInterface, NetworkManager networkManager){
     this.googleServicesInterface = googleServicesInterface;
     this.networkManager = networkManager;
+    this.random = new Random(1245);
   }
 
   @Override
@@ -105,13 +109,13 @@ public class SpaceRtsGame extends ApplicationAdapter {
     text.text = "Entity" + i;
 
     texture.region = new TextureRegion(new Texture(Gdx.files.internal("badlogic.jpg")));
-    transform.position.set(SCENE_WIDTH * (float)Math.random() - bounds.bounds.width * .4f,
-            SCENE_HEIGHT * (float)Math.random() - bounds.bounds.height * .4f, 0);
+    transform.position.set(SCENE_WIDTH * random.nextFloat() - bounds.bounds.width * .4f,
+            SCENE_HEIGHT * random.nextFloat() - bounds.bounds.height * .4f, 0);
     bounds.bounds.set(transform.position.x - width * 0.5f, transform.position.y * 0.5f, width, height);
     movement.velocity.set(10, 10);
     movement.acceleration.set(30, 30);
 
-    gunner.reload_progress = (float)Math.random() * gunner.reload_time;
+    gunner.reload_progress = random.nextFloat() * gunner.reload_time;
 
     entity.add(texture);
     entity.add(transform);

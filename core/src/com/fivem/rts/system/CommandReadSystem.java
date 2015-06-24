@@ -34,11 +34,11 @@ public class CommandReadSystem extends EntitySystem {
     ArrayList<MoveCommand> commands = commandManager.getCommands();
 
     for (MoveCommand moveCommand: commands) {
-      Gdx.app.log("Command", "Running: " + moveCommand.toString());
       if (moveCommand == null) {
         return;
       }
-
+      Gdx.app.log("Command", "Running: " + moveCommand.toString());
+      
       ImmutableArray<Entity> selectableEntities = engine.getEntitiesFor(Family.all(SelectionComponent.class).get());
       for (Entity entity : selectableEntities) {
         if (!moveCommand.entityUuids.contains(entity.getId(), true)) {
