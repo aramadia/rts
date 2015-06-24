@@ -38,7 +38,7 @@ public class CommandReadSystem extends EntitySystem {
         return;
       }
       Gdx.app.log("Command", "Running: " + moveCommand.toString());
-      
+
       ImmutableArray<Entity> selectableEntities = engine.getEntitiesFor(Family.all(SelectionComponent.class).get());
       for (Entity entity : selectableEntities) {
         if (!moveCommand.entityUuids.contains(entity.getId(), true)) {

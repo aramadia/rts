@@ -69,6 +69,7 @@ public class SpaceRtsGame extends ApplicationAdapter {
     ShootingSystem shootingSystem = new ShootingSystem();
     RenderSystem renderSystem = new RenderSystem(camera);
     CommandWriteSystem commandWriteSystem = new CommandWriteSystem(commandManager);
+    ParticleSystem particleSystem = new ParticleSystem();
 
     // Order matters
     ashleyEngine.addSystem(commandReadSystem);
@@ -77,6 +78,7 @@ public class SpaceRtsGame extends ApplicationAdapter {
     ashleyEngine.addSystem(boundsSystem);
     ashleyEngine.addSystem(shootingSystem);
     ashleyEngine.addSystem(collisionSystem);
+    ashleyEngine.addSystem(particleSystem);
     ashleyEngine.addSystem(renderSystem);
     ashleyEngine.addSystem(commandWriteSystem);
 
