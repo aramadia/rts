@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -22,7 +23,6 @@ public class SpaceRtsGame extends ApplicationAdapter {
 
   // TODO this shit should be moved somewhere
   public static boolean DEBUG_MODE = false;
-  public static boolean CONSOLE_ENABLED = false;
 
   public static final float SCENE_WIDTH = 1280;
   public static final float SCENE_HEIGHT = 720;
@@ -152,6 +152,5 @@ public class SpaceRtsGame extends ApplicationAdapter {
   @Override
   public void dispose() {
   }
-
 
 }

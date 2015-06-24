@@ -9,15 +9,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.fivem.rts.SpaceRtsGame;
 
 public class ConsoleSystem extends EntitySystem {
 
+  public static boolean CONSOLE_ENABLED = false;
+
+  private static Array<String> logs = new Array<String>();
+
   private final Stage stage;
+  private final Label.LabelStyle style;
   private BitmapFont font;
-  private String text;
   private ScrollPane scrollPane;
-  private Array<Label> labels;
   private Table table;
 
   public ConsoleSystem(Viewport viewport) {
@@ -25,20 +27,8 @@ public class ConsoleSystem extends EntitySystem {
     this.font = new BitmapFont();
     this.font.setColor(Color.RED);
 
-    text = "Console \n";
-    for (int i = 0; i < 250; i++) {
-      text += i + "line \n";
-    }
-
-    labels = new Array<Label>();
-    for (int i = 0; i < 250; i++) {
-      labels.add(new Label(i + "line \n", new Label.LabelStyle(font, Color.GREEN)));
-    }
-
+    style = new Label.LabelStyle(font, Color.GREEN);
     table = new Table();
-    for (Label label : labels) {
-      table.add(label).expandX().fillX().top().left().padLeft(4).row();
-    }
 
     ScrollPane.ScrollPaneStyle sps = new ScrollPane.ScrollPaneStyle();
 
@@ -54,11 +44,24 @@ public class ConsoleSystem extends EntitySystem {
 
   @Override
   public void update(float deltaTime) {
-    if (!SpaceRtsGame.CONSOLE_ENABLED) {
+    if (!CONSOLE_ENABLED) {
       return;
     }
+
+    table.clear();
+    for (String message : logs) {
+      table.add(new Label(message, style)).expandX().fillX().top().left().padLeft(4).row();
+    }
+
+    scrollPane.validate();
+    scrollPane.setScrollPercentY(1);
 
     stage.act(deltaTime);
     stage.draw();
   }
+
+  public static void addLog(String message) {
+    logs.add(message);
+  }
+
 }

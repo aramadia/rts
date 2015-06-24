@@ -59,7 +59,7 @@ public class InputSystem extends EntitySystem implements InputProcessor {
         SpaceRtsGame.DEBUG_MODE = !SpaceRtsGame.DEBUG_MODE;
         return true;
       case Input.Keys.TAB:
-        SpaceRtsGame.CONSOLE_ENABLED = !SpaceRtsGame.CONSOLE_ENABLED;
+        ConsoleSystem.CONSOLE_ENABLED = !ConsoleSystem.CONSOLE_ENABLED;
         return true;
       case Input.Keys.ESCAPE:
         unselectAllUnits();
