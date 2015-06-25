@@ -11,6 +11,7 @@ import com.fivem.rts.GoogleServicesInterface;
 import com.fivem.rts.MoveCommand;
 import com.fivem.rts.SpaceRtsGame;
 import com.fivem.rts.network.NetworkManager;
+import com.fivem.rts.system.ConsoleSystem;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesStatusCodes;
 import com.google.android.gms.games.multiplayer.Participant;
@@ -227,8 +228,20 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
     Gdx.app.log(TAG, "Sending command " + serializedCommand);
     broadcastMessage(serializedCommand.getBytes());
 
-    // Since you don't get broadcasted messagses, add it to the queue here.
+    // Since you don't get broadcasted messages, add it to the queue here.
     queuedCommands.add(moveCommand);
+  }
+
+  @Override
+  public void log(String tag, String message) {
+    super.log(tag, message);
+    ConsoleSystem.addLog(tag, message);
+  }
+
+  @Override
+  public void log(String tag, String message, Throwable exception) {
+    super.log(tag, message, exception);
+    ConsoleSystem.addLog(tag, message);
   }
 }
 
