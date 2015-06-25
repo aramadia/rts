@@ -7,8 +7,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -97,7 +99,52 @@ public class SpaceRtsGame extends ApplicationAdapter {
     for (int i = 0; i < 2; i++) {
       Entity entity = createSmileyEntity(i);
       ashleyEngine.addEntity(entity);
+
+
+      Entity zombie = createZombie(i);
+      ashleyEngine.addEntity(zombie);
     }
+  }
+
+  private Entity createZombie(int i) {
+    Entity entity = new Entity();
+
+    AnimatedComponent animation = new AnimatedComponent();
+    TransformComponent transform = new TransformComponent();
+    BoundsComponent bounds = new BoundsComponent();
+    MovementComponent movement = new MovementComponent();
+    TextComponent text = new TextComponent();
+    SelectionComponent selection = new SelectionComponent();
+
+    int width = 100;
+    int height = 100;
+
+    text.text = "Zombie" + i;
+
+    animation.sheet = new Texture(Gdx.files.internal("zombiewalk.png")); // #9
+    TextureRegion[][] tmp = TextureRegion.split(animation.sheet, animation.sheet.getWidth()/8,
+        animation.sheet.getHeight()/1);              // #10
+    animation.frames = new TextureRegion[8 * 1];
+    int index = 0;
+    for (int y = 0; y < 1; y++) {
+      for (int x = 0; x < 8; x++) {
+        animation.frames[index++] = tmp[y][x];
+      }
+    }
+    animation.animation = new Animation(0.1f, animation.frames);
+    transform.position.set(SCENE_WIDTH * random.nextFloat() - bounds.bounds.width * .4f,
+        SCENE_HEIGHT * random.nextFloat() - bounds.bounds.height * .4f, 0);
+    bounds.bounds.set(transform.position.x - width * 0.5f, transform.position.y * 0.5f, width, height);
+    movement.velocity.set(100, 0).setAngleRad(MathUtils.PI2 * random.nextFloat());
+
+    entity.add(animation);
+    entity.add(transform);
+    entity.add(bounds);
+    entity.add(movement);
+    entity.add(text);
+    entity.add(selection);
+
+    return entity;
   }
 
   private Entity createSmileyEntity(int i) {

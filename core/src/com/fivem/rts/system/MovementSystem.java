@@ -72,6 +72,10 @@ public class MovementSystem extends IteratingSystem {
     // apply velocity
     tmp.set(movement.velocity).scl(deltaTime);
     transform.position.add(tmp.x, tmp.y, 0);
+
+    // Set orientation of object to point in the same direction of velocity
+    // TODO: Add a rotation offset to each sprite?
+    transform.rotation = movement.velocity.angle() - 90;
   }
 
 }

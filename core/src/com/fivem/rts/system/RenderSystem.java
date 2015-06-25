@@ -22,6 +22,7 @@ public class RenderSystem extends EntitySystem {
   private OrthographicCamera camera;
   private ShapeRenderer shapeRenderer;
 
+  private ComponentMapper<AnimatedComponent> animatedComponent = ComponentMapper.getFor(AnimatedComponent.class);
   private ComponentMapper<TransformComponent> transformMapper = ComponentMapper.getFor(TransformComponent.class);
   private ComponentMapper<TextureComponent> textureMapper = ComponentMapper.getFor(TextureComponent.class);
   private ComponentMapper<TextComponent> textMapper = ComponentMapper.getFor(TextComponent.class);
@@ -61,6 +62,7 @@ public class RenderSystem extends EntitySystem {
       TextureComponent texture = textureMapper.get(e);
       TextComponent text = textMapper.get(e);
       BoundsComponent bounds = boundsMapper.get(e);
+      AnimatedComponent animation = animatedComponent.get(e);
 
       float x = transform.position.x;
       float y = transform.position.y;
@@ -71,6 +73,24 @@ public class RenderSystem extends EntitySystem {
         float originY = bounds.bounds.height * .5f;
 
         batch.draw(texture.region,
+            x - originX, y - originY,
+            originX, originY,
+            bounds.bounds.width, bounds.bounds.height,
+            transform.scale.x, transform.scale.y,
+            transform.rotation);
+      }
+
+      if (animation != null) {
+        // TODO probably should not be using bounds for this
+        float originX = bounds.bounds.width * .5f;
+        float originY = bounds.bounds.height * .5f;
+
+        animation.animationTime += deltaTime;
+        animation.currentFrame = animation.animation.getKeyFrame(animation.animationTime, true);
+
+
+
+        batch.draw(animation.currentFrame,
             x - originX, y - originY,
             originX, originY,
             bounds.bounds.width, bounds.bounds.height,
