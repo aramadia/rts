@@ -96,9 +96,12 @@ public class SpaceRtsGame extends ApplicationAdapter {
     ashleyEngine.addSystem(consoleSystem);
     ashleyEngine.addSystem(commandWriteSystem);
 
-    for (int i = 0; i < 2; i++) {
-      Entity entity = createSmileyEntity(i);
-      ashleyEngine.addEntity(entity);
+
+    Entity entity = createSmileyEntity(0);
+    ashleyEngine.addEntity(entity);
+
+    for (int i = 0; i < 50; i++) {
+
 
 
       Entity zombie = createZombie(i);
@@ -134,7 +137,9 @@ public class SpaceRtsGame extends ApplicationAdapter {
     animation.animation = new Animation(0.1f, animation.frames);
     transform.position.set(SCENE_WIDTH * random.nextFloat() - bounds.bounds.width * .4f,
         SCENE_HEIGHT * random.nextFloat() - bounds.bounds.height * .4f, 0);
-    bounds.bounds.set(transform.position.x - width * 0.5f, transform.position.y * 0.5f, width, height);
+    transform.scale.set(0.5f, 0.5f);
+    bounds.bounds.set(transform.position.x - width * transform.scale.x * 0.5f, transform.position.y * 0.5f,
+        width  * transform.scale.x, height  * transform.scale.y);
     movement.velocity.set(100, 0).setAngleRad(MathUtils.PI2 * random.nextFloat());
 
     entity.add(animation);
