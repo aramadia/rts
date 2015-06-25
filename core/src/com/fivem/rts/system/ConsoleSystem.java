@@ -60,7 +60,7 @@ public class ConsoleSystem extends EntitySystem {
     stage.draw();
   }
 
-  public static void addLog(String message) {
+  public static void addLog(String tag, String message) {
     logs.add(message);
   }
 
