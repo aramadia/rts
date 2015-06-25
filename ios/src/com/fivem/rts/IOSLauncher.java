@@ -2,6 +2,7 @@ package com.fivem.rts;
 
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration;
+import com.fivem.rts.network.JsonMockNetworkManager;
 import org.robovm.apple.foundation.NSAutoreleasePool;
 import org.robovm.apple.uikit.UIApplication;
 
@@ -37,7 +38,7 @@ public class IOSLauncher extends IOSApplication.Delegate {
       }
     };
 
-    return new IOSApplication(new SpaceRtsGame(googleServicesInterface), config);
+    return new IOSConsoleApplication(new SpaceRtsGame(googleServicesInterface, new JsonMockNetworkManager()), config);
   }
 
   public static void main(String[] argv) {
