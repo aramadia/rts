@@ -12,7 +12,7 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.fivem.rts.CommandManager;
-import com.fivem.rts.MoveCommand;
+import com.fivem.rts.Command;
 import com.fivem.rts.SpaceRtsGame;
 import com.fivem.rts.component.*;
 
@@ -121,19 +121,19 @@ public class InputSystem extends EntitySystem {
       }
 
       boolean actionTaken = false;
-      MoveCommand moveCommand = new MoveCommand();
-      moveCommand.setDestination(pos.x, pos.y);
+      Command command = new Command();
+      command.setDestination(pos.x, pos.y);
       // No entities clicked - attempt to move entities there if relevant
       for (Entity entity : selectableEntities) {
         SelectionComponent selection = entity.getComponent(SelectionComponent.class);
         if (selection.selected) {
-          moveCommand.addEntityUuid(entity.getId());
+          command.addEntityUuid(entity.getId());
           actionTaken = true;
         }
       }
 
-      if (moveCommand.entityUuids.size != 0) {
-        commandManager.addCommand(moveCommand);
+      if (command.entityUuids.size != 0) {
+        commandManager.addCommand(command);
       }
 
       return actionTaken;

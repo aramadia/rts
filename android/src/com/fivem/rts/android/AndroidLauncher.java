@@ -7,8 +7,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.utils.Json;
+import com.fivem.rts.Command;
 import com.fivem.rts.GoogleServicesInterface;
-import com.fivem.rts.MoveCommand;
 import com.fivem.rts.SpaceRtsGame;
 import com.fivem.rts.network.NetworkManager;
 import com.fivem.rts.system.ConsoleSystem;
@@ -32,7 +32,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
   String myParticipantId;
   private ArrayList<Participant> participants = new ArrayList<Participant>();
   Json json = new Json();
-  private ArrayList<MoveCommand> queuedCommands = new ArrayList<MoveCommand>();
+  private ArrayList<Command> queuedCommands = new ArrayList<Command>();
 
 
   @Override
@@ -198,7 +198,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
     String s = new String(message);
     Gdx.app.log(TAG, "received " + s + " from " + playerId);
 
-    queuedCommands.add(json.fromJson(MoveCommand.class, s));
+    queuedCommands.add(json.fromJson(Command.class, s));
   }
 
   @Override
@@ -213,23 +213,23 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
   }
 
   @Override
-  public ArrayList<MoveCommand> receiveCommands() {
-    ArrayList<MoveCommand> temp = new ArrayList<MoveCommand>(queuedCommands);
+  public ArrayList<Command> receiveCommands() {
+    ArrayList<Command> temp = new ArrayList<Command>(queuedCommands);
     queuedCommands.clear();
     return temp;
   }
 
   @Override
-  public void sendCommand(MoveCommand moveCommand) {
-    if (moveCommand == null) {
+  public void sendCommand(Command command) {
+    if (command == null) {
       return;
     }
-    String serializedCommand = json.toJson(moveCommand);
+    String serializedCommand = json.toJson(command);
     Gdx.app.log(TAG, "Sending command " + serializedCommand);
     broadcastMessage(serializedCommand.getBytes());
 
     // Since you don't get broadcasted messages, add it to the queue here.
-    queuedCommands.add(moveCommand);
+    queuedCommands.add(command);
   }
 
   @Override

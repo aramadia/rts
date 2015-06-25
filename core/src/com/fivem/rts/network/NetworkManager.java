@@ -1,6 +1,6 @@
 package com.fivem.rts.network;
 
-import com.fivem.rts.MoveCommand;
+import com.fivem.rts.Command;
 
 import java.util.ArrayList;
 
@@ -11,13 +11,13 @@ public interface NetworkManager {
    * Call to obtain list of commands queued since last call.
    * @return
    */
-  ArrayList<MoveCommand> receiveCommands();
+  ArrayList<Command> receiveCommands();
 
   /**
    * Call to broadcast commands over the network.
    * Note: This adds it to its own command queue, since you don't send commands to yourself.
-   * @param moveCommand
+   * @param command
    */
-  void sendCommand(MoveCommand moveCommand);
+  void sendCommand(Command command);
 
 }

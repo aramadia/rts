@@ -7,17 +7,17 @@ import java.util.ArrayList;
 public class CommandManager {
 
   private NetworkManager networkManager;
-  private MoveCommand command;
+  private Command command;
 
   public CommandManager(NetworkManager networkManager) {
     this.networkManager = networkManager;
   }
 
-  public void addCommand(MoveCommand command) {
+  public void addCommand(Command command) {
     this.command = command;
   }
 
-  public ArrayList<MoveCommand> getCommands() {
+  public ArrayList<Command> getCommands() {
     return networkManager.receiveCommands();
   }
 

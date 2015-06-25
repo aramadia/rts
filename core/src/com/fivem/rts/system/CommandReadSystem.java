@@ -6,8 +6,8 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
+import com.fivem.rts.Command;
 import com.fivem.rts.CommandManager;
-import com.fivem.rts.MoveCommand;
 import com.fivem.rts.component.DestinationComponent;
 import com.fivem.rts.component.SelectionComponent;
 
@@ -31,23 +31,23 @@ public class CommandReadSystem extends EntitySystem {
   public void update(float deltaTime) {
     // TODO take time into account
 
-    ArrayList<MoveCommand> commands = commandManager.getCommands();
+    ArrayList<Command> commands = commandManager.getCommands();
 
-    for (MoveCommand moveCommand: commands) {
-      if (moveCommand == null) {
+    for (Command command : commands) {
+      if (command == null) {
         return;
       }
-      Gdx.app.log("Command", "Running: " + moveCommand.toString());
+      Gdx.app.log("Command", "Running: " + command.toString());
 
       ImmutableArray<Entity> selectableEntities = engine.getEntitiesFor(Family.all(SelectionComponent.class).get());
       for (Entity entity : selectableEntities) {
-        if (!moveCommand.entityUuids.contains(entity.getId(), true)) {
+        if (!command.entityUuids.contains(entity.getId(), true)) {
           continue;
         }
         SelectionComponent selection = entity.getComponent(SelectionComponent.class);
         if (selection.selected) {
           DestinationComponent destination = new DestinationComponent();
-          destination.position.set(moveCommand.destination.x, moveCommand.destination.y);
+          destination.position.set(command.destination.x, command.destination.y);
           entity.add(destination);
         }
       }

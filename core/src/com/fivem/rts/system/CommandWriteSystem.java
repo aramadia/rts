@@ -2,7 +2,6 @@ package com.fivem.rts.system;
 
 import com.badlogic.ashley.core.EntitySystem;
 import com.fivem.rts.CommandManager;
-import com.fivem.rts.MoveCommand;
 
 public class CommandWriteSystem extends EntitySystem {
 

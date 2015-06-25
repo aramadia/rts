@@ -5,12 +5,19 @@ import com.badlogic.gdx.utils.Array;
 
 import java.io.Serializable;
 
-public class MoveCommand {
+public class Command {
+
+
+
+//  public AckCommand ackCommand;
+//  public Command moveCommand;
+
+
 
   public final Vector2 destination = new Vector2();
   public final Array<Long> entityUuids = new Array<Long>();
 
-  public MoveCommand() {
+  public Command() {
   }
 
   public void setDestination(float x, float y) {
