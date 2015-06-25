@@ -18,6 +18,7 @@ public class ConsoleSystem extends EntitySystem {
 
   private final Stage stage;
   private final Label.LabelStyle style;
+  private final Label.LabelStyle titleStyle;
   private BitmapFont font;
   private ScrollPane scrollPane;
   private Table table;
@@ -28,6 +29,7 @@ public class ConsoleSystem extends EntitySystem {
     this.font.setColor(Color.RED);
 
     style = new Label.LabelStyle(font, Color.GREEN);
+    titleStyle = new Label.LabelStyle(font, Color.BLUE);
     table = new Table();
 
     ScrollPane.ScrollPaneStyle sps = new ScrollPane.ScrollPaneStyle();
@@ -49,6 +51,7 @@ public class ConsoleSystem extends EntitySystem {
     }
 
     table.clear();
+    table.add(new Label("CONSOLE", titleStyle)).expandX().fillX().top().left().padLeft(4).row();
     for (String message : logs) {
       table.add(new Label(message, style)).expandX().fillX().top().left().padLeft(4).row();
     }
