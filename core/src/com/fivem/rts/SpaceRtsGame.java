@@ -97,13 +97,12 @@ public class SpaceRtsGame extends ApplicationAdapter {
     ashleyEngine.addSystem(commandWriteSystem);
 
 
-    Entity entity = createSmileyEntity(0);
-    ashleyEngine.addEntity(entity);
+    for (int i = 0; i < 3; i++) {
+      Entity entity = createSmileyEntity(i);
+      ashleyEngine.addEntity(entity);
+    }
 
     for (int i = 0; i < 50; i++) {
-
-
-
       Entity zombie = createZombie(i);
       ashleyEngine.addEntity(zombie);
     }
@@ -135,11 +134,14 @@ public class SpaceRtsGame extends ApplicationAdapter {
       }
     }
     animation.animation = new Animation(0.1f, animation.frames);
-    transform.position.set(SCENE_WIDTH * random.nextFloat() - bounds.bounds.width * .4f,
-        SCENE_HEIGHT * random.nextFloat() - bounds.bounds.height * .4f, 0);
+    transform.position.set(SCENE_WIDTH * random.nextFloat() - width * .4f,
+        SCENE_HEIGHT * random.nextFloat() - height * .4f, 0);
     transform.scale.set(0.5f, 0.5f);
     bounds.bounds.set(transform.position.x - width * transform.scale.x * 0.5f, transform.position.y * 0.5f,
         width  * transform.scale.x, height  * transform.scale.y);
+    bounds.newBounds.setVertices(new float[]{0, 0, width, 0, width, height, 0, height});
+    bounds.newBounds.setOrigin(width * 0.5f, height * 0.5f);
+    bounds.newBounds.translate(transform.position.x - width * 0.5f, transform.position.y - height * 0.5f);
     movement.velocity.set(100, 0).setAngleRad(MathUtils.PI2 * random.nextFloat());
 
     entity.add(animation);
@@ -169,9 +171,9 @@ public class SpaceRtsGame extends ApplicationAdapter {
     text.text = "Entity" + i;
 
     texture.region = new TextureRegion(new Texture(Gdx.files.internal("badlogic.jpg")));
-    transform.position.set(SCENE_WIDTH * random.nextFloat() - bounds.bounds.width * .4f,
-            SCENE_HEIGHT * random.nextFloat() - bounds.bounds.height * .4f, 0);
-    bounds.bounds.set(transform.position.x - width * 0.5f, transform.position.y * 0.5f, width, height);
+    transform.position.set(SCENE_WIDTH * random.nextFloat() - width * .4f, SCENE_HEIGHT * random.nextFloat() - height * .4f, 0);
+    bounds.bounds.set(transform.position.x - width * 0.5f, transform.position.y - height * 0.5f, width, height);
+    bounds.setBoundsFromRect(transform.position.x, transform.position.y, width, height);
     movement.velocity.set(10, 10);
     movement.acceleration.set(30, 30);
 

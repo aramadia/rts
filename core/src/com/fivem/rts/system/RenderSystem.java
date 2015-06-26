@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.fivem.rts.SpaceRtsGame;
 import com.fivem.rts.component.*;
 
@@ -89,7 +90,6 @@ public class RenderSystem extends EntitySystem {
         animation.currentFrame = animation.animation.getKeyFrame(animation.animationTime, true);
 
 
-
         batch.draw(animation.currentFrame,
             x - originX, y - originY,
             originX, originY,
@@ -127,7 +127,6 @@ public class RenderSystem extends EntitySystem {
         shapeRenderer.circle(transform.position.x, transform.position.y, particle.size * 0.5f);
       }
 
-
     }
     shapeRenderer.end();
 
@@ -149,7 +148,28 @@ public class RenderSystem extends EntitySystem {
       shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
       for (Entity entity : entities) {
         BoundsComponent bounds = boundsMapper.get(entity);
-        shapeRenderer.rect(bounds.bounds.x, bounds.bounds.y, bounds.bounds.width, bounds.bounds.height);
+        float[] vertices = bounds.newBounds.getTransformedVertices();
+        float x1, x2, y1, y2;
+        if (vertices.length > 2) {
+          final float firstX = vertices[0];
+          final float firstY = vertices[1];
+          for (int i = 0; i < vertices.length; i += 2) {
+            x1 = vertices[i];
+            y1 = vertices[i + 1];
+
+            if (i + 2 >= vertices.length) {
+              x2 = firstX;
+              y2 = firstY;
+            } else {
+              x2 = vertices[i + 2];
+              y2 = vertices[i + 3];
+            }
+
+            shapeRenderer.line(x1, y1, x2, y2);
+          }
+        }
+        Rectangle boundingRectangle = bounds.newBounds.getBoundingRectangle();
+//        shapeRenderer.rect(boundingRectangle.x, boundingRectangle.y, boundingRectangle.width, boundingRectangle.height);
       }
       shapeRenderer.end();
     }

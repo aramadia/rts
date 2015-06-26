@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
+import com.fivem.rts.component.BoundsComponent;
 import com.fivem.rts.component.DestinationComponent;
 import com.fivem.rts.component.MovementComponent;
 import com.fivem.rts.component.TransformComponent;
@@ -16,14 +17,16 @@ public class MovementSystem extends IteratingSystem {
   private final ComponentMapper<MovementComponent> movementMapper;
   private final ComponentMapper<TransformComponent> transformMapper;
   private final ComponentMapper<DestinationComponent> destinationMapper;
+  private final ComponentMapper<BoundsComponent> boundsMapper;
 
   private Vector2 tmp = new Vector2();
 
   public MovementSystem() {
-    super(Family.all(MovementComponent.class, TransformComponent.class).get());
+    super(Family.all(MovementComponent.class, TransformComponent.class, BoundsComponent.class).get());
     movementMapper = ComponentMapper.getFor(MovementComponent.class);
     transformMapper = ComponentMapper.getFor(TransformComponent.class);
     destinationMapper = ComponentMapper.getFor(DestinationComponent.class);
+    boundsMapper = ComponentMapper.getFor(BoundsComponent.class);
   }
 
   @Override
@@ -31,6 +34,7 @@ public class MovementSystem extends IteratingSystem {
     MovementComponent movement = movementMapper.get(entity);
     TransformComponent transform = transformMapper.get(entity);
     DestinationComponent destination = destinationMapper.get(entity);
+    BoundsComponent bounds = boundsMapper.get(entity);
 
     if (destination != null) {
       // dumb movement at static speed towards target
@@ -76,6 +80,11 @@ public class MovementSystem extends IteratingSystem {
     // Set orientation of object to point in the same direction of velocity
     // TODO: Add a rotation offset to each sprite?
     transform.rotation = movement.velocity.angle() - 90;
+
+    //update bounds
+    bounds.newBounds.translate(tmp.x, tmp.y);
+    bounds.newBounds.setRotation(transform.rotation);
+    bounds.newBounds.setScale(transform.scale.x, transform.scale.y);
   }
 
 }
