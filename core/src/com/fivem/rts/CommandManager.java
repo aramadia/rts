@@ -1,5 +1,6 @@
 package com.fivem.rts;
 
+import com.fivem.rts.command.Command;
 import com.fivem.rts.network.NetworkManager;
 
 import java.util.ArrayList;

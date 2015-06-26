@@ -7,7 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.utils.Json;
-import com.fivem.rts.Command;
+import com.fivem.rts.command.Command;
 import com.fivem.rts.GoogleServicesInterface;
 import com.fivem.rts.SpaceRtsGame;
 import com.fivem.rts.network.NetworkManager;

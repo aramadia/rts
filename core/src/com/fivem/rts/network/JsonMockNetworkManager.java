@@ -1,7 +1,7 @@
 package com.fivem.rts.network;
 
 import com.badlogic.gdx.utils.Json;
-import com.fivem.rts.Command;
+import com.fivem.rts.command.Command;
 
 import java.util.ArrayList;
 
