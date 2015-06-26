@@ -14,11 +14,13 @@ public class Command {
     NONE,
     MOVE,
     START,
+    ROOM_CONNECTED,
 
   }
 
   public MoveCommand moveCommand;
   public StartCommand startCommand;
+  public RoomConnectedCommand roomConnectedCommand;
   public Type type;
 
 
@@ -32,12 +34,30 @@ public class Command {
     return command;
   }
 
+
+  public static Command roomConnectedCommand(RoomConnectedCommand cmd) {
+    Command command = new Command();
+    command.roomConnectedCommand = cmd;
+    command.type = Type.ROOM_CONNECTED;
+    return command;
+  }
+
+  public static Command startCommand(String name) {
+    Command command = new Command();
+    command.startCommand = new StartCommand();
+    command.startCommand.name = name;
+    command.type = Type.START;
+    return command;
+  }
+
   public BaseCommand getCommand() {
     switch(type) {
       case MOVE:
         return moveCommand;
       case START:
         return startCommand;
+      case ROOM_CONNECTED:
+        return roomConnectedCommand;
       default:
         return null;
     }
@@ -45,6 +65,10 @@ public class Command {
 
   @Override
   public String toString() {
+    BaseCommand cmd = getCommand();
+    if (cmd == null) {
+      return "NULL command";
+    }
     return type.toString() + ": " + getCommand().toString();
   }
 }

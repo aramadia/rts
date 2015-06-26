@@ -60,8 +60,12 @@ public class CommandReadSystem extends EntitySystem {
             }
           }
           break;
+        case ROOM_CONNECTED:
+          Gdx.app.log(TAG, "Room connected: command system engaged!");
+          break;
+
         default:
-          Gdx.app.log(TAG, "Unknown command " + command);
+          Gdx.app.log(TAG, "Processing Unknown command " + command);
 
 
       }

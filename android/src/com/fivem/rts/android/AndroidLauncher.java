@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Json;
 import com.fivem.rts.command.Command;
 import com.fivem.rts.GoogleServicesInterface;
 import com.fivem.rts.SpaceRtsGame;
+import com.fivem.rts.command.RoomConnectedCommand;
 import com.fivem.rts.network.NetworkManager;
 import com.fivem.rts.system.ConsoleSystem;
 import com.google.android.gms.games.Games;
@@ -136,7 +137,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
       Gdx.app.error(TAG, "onRoomConnected" + statusCode);
     }
 
-    Gdx.app.log(TAG, "Starting game with room <" + room.getRoomId() + ">");
+    Gdx.app.log(TAG, "Starting game with room " + room.getRoomId());
 
 
     roomId = room.getRoomId();
@@ -145,8 +146,13 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
 
     Gdx.app.log(TAG, "My participant Id " + myParticipantId);
 
-//    String msg = "Hi, I connected to the room " + myParticipantId;
-    //broadcastMessage(msg.getBytes());
+    RoomConnectedCommand roomCmd = new RoomConnectedCommand();
+    roomCmd.myId = myParticipantId;
+    roomCmd.participants = new ArrayList<String>();
+    for (Participant p : participants) {
+      roomCmd.participants.add(p.getParticipantId());
+    }
+    queuedCommands.add(Command.roomConnectedCommand(roomCmd));
   }
 
   @Override
