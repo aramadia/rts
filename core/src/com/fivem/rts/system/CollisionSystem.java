@@ -7,6 +7,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.fivem.rts.SpaceRtsGame;
 import com.fivem.rts.component.BoundsComponent;
 import com.fivem.rts.component.MovementComponent;
+import com.fivem.rts.component.ParticleComponent;
+import com.fivem.rts.component.ZombieComponent;
 
 public class CollisionSystem extends EntitySystem {
 
@@ -14,6 +16,7 @@ public class CollisionSystem extends EntitySystem {
   private final ComponentMapper<MovementComponent> movementMapper;
 
   private ImmutableArray<Entity> entities;
+  private Engine engine;
 
   public CollisionSystem() {
     super();
@@ -24,6 +27,7 @@ public class CollisionSystem extends EntitySystem {
 
   @Override
   public void addedToEngine(Engine engine) {
+    this.engine = engine;
     entities = engine.getEntitiesFor(Family.all(BoundsComponent.class, MovementComponent.class).get());
   }
 
@@ -53,6 +57,30 @@ public class CollisionSystem extends EntitySystem {
       // Collide with left wall
       if (movement.velocity.x < 0 && Intersector.intersectSegmentPolygon(screenCoords[3], screenCoords[0], bounds.polygon)) {
         movement.velocity.x *= -1;
+      }
+    }
+
+    for (int i = 0; i < entities.size(); i++) {
+      Entity entity = entities.get(i);
+      for (int j = i+1; j < entities.size(); j++) {
+        Entity otherEntity = entities.get(j);
+        if (Intersector.overlapConvexPolygons(
+            entity.getComponent(BoundsComponent.class).polygon,
+            otherEntity.getComponent(BoundsComponent.class).polygon)) {
+          if (entity.getComponent(ParticleComponent.class) != null) {
+            if (otherEntity.getComponent(ZombieComponent.class) != null) {
+              // kill zombie
+              engine.removeEntity(otherEntity);
+              engine.removeEntity(entity);
+            }
+          } else if (entity.getComponent(ZombieComponent.class) != null) {
+            if (otherEntity.getComponent(ParticleComponent.class) != null) {
+              // kill zombie
+              engine.removeEntity(otherEntity);
+              engine.removeEntity(entity);
+            }
+          }
+        }
       }
     }
 

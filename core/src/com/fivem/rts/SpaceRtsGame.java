@@ -115,6 +115,7 @@ public class SpaceRtsGame extends ApplicationAdapter {
     MovementComponent movement = new MovementComponent();
     TextComponent text = new TextComponent();
     SelectionComponent selection = new SelectionComponent();
+    ZombieComponent zombie = new ZombieComponent();
 
     int width = 100;
     int height = 100;
@@ -144,6 +145,7 @@ public class SpaceRtsGame extends ApplicationAdapter {
     entity.add(movement);
     entity.add(text);
     entity.add(selection);
+    entity.add(zombie);
 
     return entity;
   }
