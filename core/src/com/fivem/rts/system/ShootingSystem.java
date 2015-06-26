@@ -54,7 +54,6 @@ public class ShootingSystem extends IteratingSystem {
       bTransform.position.set(transform.position);
       bMovement.velocity.set(gunner.bullet_speed * SpaceRtsGame.random.nextFloat(),
           gunner.bullet_speed * SpaceRtsGame.random.nextFloat());
-      bBounds.bounds.set(bTransform.position.x - bParticle.size * 0.5f, bTransform.position.y - bParticle.size * 0.5f, bParticle.size, bParticle.size);
       bBounds.setBoundsFromRect(bTransform.position.x - bParticle.size * 0.5f, bTransform.position.y - bParticle.size * 0.5f, bParticle.size, bParticle.size);
       b.add(bTransform);
       b.add(bMovement);

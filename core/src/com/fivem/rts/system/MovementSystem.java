@@ -82,9 +82,9 @@ public class MovementSystem extends IteratingSystem {
     transform.rotation = movement.velocity.angle() - 90;
 
     //update bounds
-    bounds.newBounds.translate(tmp.x, tmp.y);
-    bounds.newBounds.setRotation(transform.rotation);
-    bounds.newBounds.setScale(transform.scale.x, transform.scale.y);
+    bounds.polygon.translate(tmp.x, tmp.y);
+    bounds.polygon.setRotation(transform.rotation);
+    bounds.polygon.setScale(transform.scale.x, transform.scale.y);
   }
 
 }

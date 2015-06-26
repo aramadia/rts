@@ -114,7 +114,7 @@ public class InputSystem extends EntitySystem {
           engine.getEntitiesFor(Family.all(SelectionComponent.class, BoundsComponent.class).get());
 
       for (Entity selectableEntity : selectableEntities) {
-        if (selectableEntity.getComponent(BoundsComponent.class).bounds.contains(pos.x, pos.y)) {
+        if (selectableEntity.getComponent(BoundsComponent.class).polygon.contains(pos.x, pos.y)) {
           SelectionComponent selection = selectableEntity.getComponent(SelectionComponent.class);
           selection.selected = !selection.selected;
           return true;

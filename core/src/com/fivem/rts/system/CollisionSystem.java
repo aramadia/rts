@@ -36,22 +36,22 @@ public class CollisionSystem extends EntitySystem {
 
       Vector2[] screenCoords = {new Vector2(0,0), new Vector2(SpaceRtsGame.SCENE_WIDTH, 0), new Vector2(SpaceRtsGame.SCENE_WIDTH, SpaceRtsGame.SCENE_HEIGHT), new Vector2(0, SpaceRtsGame.SCENE_HEIGHT)};
       // Collide with bottom wall
-      if (movement.velocity.y < 0 && Intersector.intersectSegmentPolygon(screenCoords[0], screenCoords[1], bounds.newBounds)) {
+      if (movement.velocity.y < 0 && Intersector.intersectSegmentPolygon(screenCoords[0], screenCoords[1], bounds.polygon)) {
         movement.velocity.y *= -1;
       }
 
       // Collide with right wall
-      if (movement.velocity.x > 0 && Intersector.intersectSegmentPolygon(screenCoords[1], screenCoords[2], bounds.newBounds)) {
+      if (movement.velocity.x > 0 && Intersector.intersectSegmentPolygon(screenCoords[1], screenCoords[2], bounds.polygon)) {
         movement.velocity.x *= -1;
       }
 
       // Collide with top wall
-      if (movement.velocity.y > 0 && Intersector.intersectSegmentPolygon(screenCoords[2], screenCoords[3], bounds.newBounds)) {
+      if (movement.velocity.y > 0 && Intersector.intersectSegmentPolygon(screenCoords[2], screenCoords[3], bounds.polygon)) {
         movement.velocity.y *= -1;
       }
 
       // Collide with left wall
-      if (movement.velocity.x < 0 && Intersector.intersectSegmentPolygon(screenCoords[3], screenCoords[0], bounds.newBounds)) {
+      if (movement.velocity.x < 0 && Intersector.intersectSegmentPolygon(screenCoords[3], screenCoords[0], bounds.polygon)) {
         movement.velocity.x *= -1;
       }
     }

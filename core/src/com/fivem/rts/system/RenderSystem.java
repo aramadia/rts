@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Polygon;
 import com.fivem.rts.SpaceRtsGame;
 import com.fivem.rts.component.*;
 
@@ -69,22 +69,22 @@ public class RenderSystem extends EntitySystem {
       float y = transform.position.y;
 
       if (texture != null) {
-        // TODO probably should not be using bounds for this
-        float originX = bounds.bounds.width * .5f;
-        float originY = bounds.bounds.height * .5f;
+        // TODO probably should not be using rect for this
+        float originX = bounds.rect.width * .5f;
+        float originY = bounds.rect.height * .5f;
 
         batch.draw(texture.region,
             x - originX, y - originY,
             originX, originY,
-            bounds.bounds.width, bounds.bounds.height,
+            bounds.rect.width, bounds.rect.height,
             transform.scale.x, transform.scale.y,
             transform.rotation);
       }
 
       if (animation != null) {
-        // TODO probably should not be using bounds for this
-        float originX = bounds.bounds.width * .5f;
-        float originY = bounds.bounds.height * .5f;
+        // TODO probably should not be using rect for this
+        float originX = bounds.rect.width * .5f;
+        float originY = bounds.rect.height * .5f;
 
         animation.animationTime += deltaTime;
         animation.currentFrame = animation.animation.getKeyFrame(animation.animationTime, true);
@@ -93,7 +93,7 @@ public class RenderSystem extends EntitySystem {
         batch.draw(animation.currentFrame,
             x - originX, y - originY,
             originX, originY,
-            bounds.bounds.width, bounds.bounds.height,
+            bounds.rect.width, bounds.rect.height,
             transform.scale.x, transform.scale.y,
             transform.rotation);
       }
@@ -137,7 +137,7 @@ public class RenderSystem extends EntitySystem {
       SelectionComponent selection = selectedMapper.get(entity);
       if (selection.selected) {
         BoundsComponent bounds = boundsMapper.get(entity);
-        shapeRenderer.rect(bounds.bounds.x, bounds.bounds.y, bounds.bounds.width, bounds.bounds.height);
+        drawPolygon(bounds.polygon);
       }
     }
     shapeRenderer.end();
@@ -148,31 +148,33 @@ public class RenderSystem extends EntitySystem {
       shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
       for (Entity entity : entities) {
         BoundsComponent bounds = boundsMapper.get(entity);
-        float[] vertices = bounds.newBounds.getTransformedVertices();
-        float x1, x2, y1, y2;
-        if (vertices.length > 2) {
-          final float firstX = vertices[0];
-          final float firstY = vertices[1];
-          for (int i = 0; i < vertices.length; i += 2) {
-            x1 = vertices[i];
-            y1 = vertices[i + 1];
-
-            if (i + 2 >= vertices.length) {
-              x2 = firstX;
-              y2 = firstY;
-            } else {
-              x2 = vertices[i + 2];
-              y2 = vertices[i + 3];
-            }
-
-            shapeRenderer.line(x1, y1, x2, y2);
-          }
-        }
-        Rectangle boundingRectangle = bounds.newBounds.getBoundingRectangle();
-//        shapeRenderer.rect(boundingRectangle.x, boundingRectangle.y, boundingRectangle.width, boundingRectangle.height);
+        drawPolygon(bounds.polygon);
       }
       shapeRenderer.end();
     }
 
+  }
+
+  private void drawPolygon(Polygon polygon) {
+    float[] vertices = polygon.getTransformedVertices();
+    float x1, x2, y1, y2;
+    if (vertices.length > 2) {
+      final float firstX = vertices[0];
+      final float firstY = vertices[1];
+      for (int i = 0; i < vertices.length; i += 2) {
+        x1 = vertices[i];
+        y1 = vertices[i + 1];
+
+        if (i + 2 >= vertices.length) {
+          x2 = firstX;
+          y2 = firstY;
+        } else {
+          x2 = vertices[i + 2];
+          y2 = vertices[i + 3];
+        }
+
+        shapeRenderer.line(x1, y1, x2, y2);
+      }
+    }
   }
 }

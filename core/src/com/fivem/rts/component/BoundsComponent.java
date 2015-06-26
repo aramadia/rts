@@ -9,12 +9,15 @@ import com.badlogic.gdx.math.Rectangle;
  * Used for collision detection, sizing of drawables, selection
  */
 public class BoundsComponent extends Component {
-  public final Polygon newBounds = new Polygon();
-  public final Rectangle bounds = new Rectangle();
+  public final Polygon polygon = new Polygon();
+  public final Rectangle rect = new Rectangle();
 
   public void setBoundsFromRect(float x, float y, float width, float height) {
-    newBounds.setVertices(new float[]{0, 0, width, 0, width, height, 0, height});
-    newBounds.setOrigin(width * 0.5f, height * 0.5f);
-    newBounds.translate(x - width * 0.5f, y - height * 0.5f);
+    polygon.setVertices(new float[]{0, 0, width, 0, width, height, 0, height});
+    polygon.setOrigin(width * 0.5f, height * 0.5f);
+    polygon.translate(x - width * 0.5f, y - height * 0.5f);
+
+    // TODO move this somewhere else
+    rect.set(x, y, width, height);
   }
 }
