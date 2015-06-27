@@ -7,6 +7,30 @@ import com.fivem.rts.command.Command;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * How synchronization works
+ *
+ * == Game is in local state (not connected to a room) ==
+ * - We still use gameSync so the code gets used
+ * - However only requires one ack, and we send acks to ourselves
+ * - Commands still get executed FRAME_DELAY later locally
+ *
+ * == Room Connected
+ * - Detected by GoogleServiceInterface connected()
+ * - However the network is still cold (for some reason it takes a few more seconds before you can send commands)
+ * - Send the START command to all parties
+ * - TODO: elect leader and pick random seed, game type etc.
+ *
+ * == Wait until NUM_PLAYERS Start is sent
+ * - Official game start
+ * - Reset gameSync frame counter
+ * - Reset world so everyone has the same f0 world (reset random too)
+ *
+ * == Normal Game operation
+ * - Commands get queued by GameSync, when the required acks for curFrame is accumulated, the commands are forwarded.
+ * - All commands are sent with curFrame+FRAME_DELAY
+ * - At the end of every frame, an ack for curFrame+FRAME_DELAY is sent
+ */
 public class GameSync {
   private int frame;
   private final static int FRAME_DELAY = 12;
