@@ -8,19 +8,22 @@ import java.io.Serializable;
 /**
  * Contains all commands, but only one is set.
  * Use CommandType to figure out which command is set
- */
-public class Command {
+ * TODO Use proper serialization so we don't need this crap.  (NOt sure how to do json inheritance)
+    */
+  public class Command {
   public enum Type {
     NONE,
     MOVE,
     START,
     ROOM_CONNECTED,
+    ACK,
 
   }
 
   public MoveCommand moveCommand;
   public StartCommand startCommand;
   public RoomConnectedCommand roomConnectedCommand;
+  public AckCommand ackCommand;
   public Type type;
 
 
@@ -50,6 +53,13 @@ public class Command {
     return command;
   }
 
+  public static Command ackCommand(AckCommand cmd) {
+    Command command = new Command();
+    command.ackCommand = cmd;
+    command.type = Type.ACK;
+    return command;
+  }
+
   public BaseCommand getCommand() {
     switch(type) {
       case MOVE:
@@ -58,6 +68,8 @@ public class Command {
         return startCommand;
       case ROOM_CONNECTED:
         return roomConnectedCommand;
+      case ACK:
+        return ackCommand;
       default:
         return null;
     }

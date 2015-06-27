@@ -29,6 +29,12 @@ public class SpaceRtsGame extends ApplicationAdapter {
   public static final float SCENE_WIDTH = 1280;
   public static final float SCENE_HEIGHT = 720;
 
+  // Use this constant to indicate the number of players, so we can find all references
+  // easily when we need to increase the player count
+  public static final int NUM_PLAYERS = 2;
+
+  public static Random random;
+
   private OrthographicCamera camera;
   private OrthographicCamera cameraHud;
 
@@ -40,7 +46,7 @@ public class SpaceRtsGame extends ApplicationAdapter {
   static GoogleServicesInterface googleServicesInterface;
   private CommandManager commandManager;
   private NetworkManager networkManager;
-  public static Random random;
+
   private SpriteBatch spriteBatch;
   private World world;
 
