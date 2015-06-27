@@ -16,8 +16,8 @@ import java.util.ArrayList;
 
 public class CommandReadSystem extends EntitySystem {
 
+  private static final String TAG = CommandReadSystem.class.getSimpleName();
 
-  private static final String TAG = "CommandReadSystem";
   private final CommandNetwork commandNetwork;
   private Engine engine;
 
@@ -67,10 +67,7 @@ public class CommandReadSystem extends EntitySystem {
         default:
           Gdx.app.log(TAG, "Processing Unknown command " + command);
 
-
       }
-
-
     }
   }
 }

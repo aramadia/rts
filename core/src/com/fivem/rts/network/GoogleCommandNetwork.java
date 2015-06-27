@@ -11,11 +11,12 @@ import java.util.List;
  * Implementation of network manager using GoogleServiceInterface
  */
 public class GoogleCommandNetwork implements CommandNetwork {
+
+  private final static String TAG = GoogleCommandNetwork.class.getSimpleName();
+
   private GoogleServicesInterface network;
   private ArrayList<Command> queuedCommands = new ArrayList<Command>();
   private Json json = new Json();
-  private final static String TAG = "GoogleCommandNetwork";
-
 
   public GoogleCommandNetwork(GoogleServicesInterface network) {
     this.network = network;

@@ -23,7 +23,7 @@ import java.util.List;
 public class AndroidLauncher extends AndroidApplication implements GoogleServicesInterface, RoomUpdateListener,
         RealTimeMessageReceivedListener {
 
-  private static final String TAG = "AndroidImpl";
+  private static final String TAG = AndroidLauncher.class.getSimpleName();
   GameHelper gameHelper;
 
   String roomId;

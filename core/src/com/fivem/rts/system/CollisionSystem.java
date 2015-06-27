@@ -60,23 +60,28 @@ public class CollisionSystem extends EntitySystem {
       }
     }
 
+    Entity entity;
+    Entity entity2;
+    BoundsComponent bounds;
+    BoundsComponent bounds2;
     for (int i = 0; i < entities.size(); i++) {
-      Entity entity = entities.get(i);
+      entity = entities.get(i);
       for (int j = i+1; j < entities.size(); j++) {
-        Entity otherEntity = entities.get(j);
-        if (Intersector.overlapConvexPolygons(
-            entity.getComponent(BoundsComponent.class).polygon,
-            otherEntity.getComponent(BoundsComponent.class).polygon)) {
+        entity2 = entities.get(j);
+        bounds = entity.getComponent(BoundsComponent.class);
+        bounds2 = entity2.getComponent(BoundsComponent.class);
+        if (bounds.polygon.getBoundingRectangle().overlaps(bounds2.polygon.getBoundingRectangle())
+            && Intersector.overlapConvexPolygons(bounds.polygon, bounds2.polygon)) {
           if (entity.getComponent(ParticleComponent.class) != null) {
-            if (otherEntity.getComponent(ZombieComponent.class) != null) {
+            if (entity2.getComponent(ZombieComponent.class) != null) {
               // kill zombie
-              engine.removeEntity(otherEntity);
+              engine.removeEntity(entity2);
               engine.removeEntity(entity);
             }
           } else if (entity.getComponent(ZombieComponent.class) != null) {
-            if (otherEntity.getComponent(ParticleComponent.class) != null) {
+            if (entity2.getComponent(ParticleComponent.class) != null) {
               // kill zombie
-              engine.removeEntity(otherEntity);
+              engine.removeEntity(entity2);
               engine.removeEntity(entity);
             }
           }

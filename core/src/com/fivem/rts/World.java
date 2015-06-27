@@ -28,13 +28,11 @@ public class World {
     Gdx.app.log(TAG, "Assets loaded");
 
     for (int i = 0; i < 3; i++) {
-      Entity entity = createSmileyEntity(i);
-      engine.addEntity(entity);
+      engine.addEntity(createSmileyEntity(i));
     }
 
     for (int i = 0; i < 1000; i++) {
-      Entity zombie = createZombie(i);
-      engine.addEntity(zombie);
+      engine.addEntity(createZombie(i));
     }
   }
 
