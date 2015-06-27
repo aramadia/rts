@@ -38,7 +38,7 @@ public class SpaceRtsGame extends ApplicationAdapter {
 
   private Engine ashleyEngine;
 
-  static GoogleServicesInterface googleServicesInterface;
+  private GoogleServicesInterface googleServicesInterface;
   private CommandNetwork commandNetwork;
 
   private SpriteBatch spriteBatch;
@@ -47,12 +47,12 @@ public class SpaceRtsGame extends ApplicationAdapter {
   public SpaceRtsGame(GoogleServicesInterface googleServicesInterface){
     this.googleServicesInterface = googleServicesInterface;
     this.commandNetwork = new GoogleCommandNetwork(googleServicesInterface);
-    this.random = new Random(79);
+    random = new Random(79);
   }
 
   @Override
   public void create() {
-    this.googleServicesInterface.signin();
+    googleServicesInterface.signin();
 
     camera = new OrthographicCamera();
     cameraHud = new OrthographicCamera();
