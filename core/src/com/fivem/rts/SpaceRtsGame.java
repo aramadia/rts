@@ -9,9 +9,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.fivem.rts.network.GoogleNetworkManager;
+import com.fivem.rts.network.GoogleCommandNetwork;
 import com.fivem.rts.network.GoogleServicesInterface;
-import com.fivem.rts.network.NetworkManager;
+import com.fivem.rts.network.CommandNetwork;
 import com.fivem.rts.system.*;
 
 import java.util.Random;
@@ -39,15 +39,14 @@ public class SpaceRtsGame extends ApplicationAdapter {
   private Engine ashleyEngine;
 
   static GoogleServicesInterface googleServicesInterface;
-  private CommandManager commandManager;
-  private NetworkManager networkManager;
+  private CommandNetwork commandNetwork;
 
   private SpriteBatch spriteBatch;
   private World world;
 
   public SpaceRtsGame(GoogleServicesInterface googleServicesInterface){
     this.googleServicesInterface = googleServicesInterface;
-    this.networkManager = new GoogleNetworkManager(googleServicesInterface);
+    this.commandNetwork = new GoogleCommandNetwork(googleServicesInterface);
     this.random = new Random(79);
   }
 
@@ -74,17 +73,15 @@ public class SpaceRtsGame extends ApplicationAdapter {
     spriteBatch = new SpriteBatch();
 
     ashleyEngine = new Engine();
-    commandManager = new CommandManager(this.networkManager);
 
-    CommandReadSystem commandReadSystem = new CommandReadSystem(commandManager);
-    InputSystem inputSystem = new InputSystem(camera, commandManager);
+    CommandReadSystem commandReadSystem = new CommandReadSystem(commandNetwork);
+    InputSystem inputSystem = new InputSystem(camera, commandNetwork);
     MovementSystem movementSystem = new MovementSystem();
     ShootingSystem shootingSystem = new ShootingSystem();
     CollisionSystem collisionSystem = new CollisionSystem();
     ParticleSystem particleSystem = new ParticleSystem();
     RenderSystem renderSystem = new RenderSystem(camera, spriteBatch);
     ConsoleSystem consoleSystem = new ConsoleSystem(viewportHud);
-    CommandWriteSystem commandWriteSystem = new CommandWriteSystem(commandManager);
 
     // Order matters
     ashleyEngine.addSystem(commandReadSystem);
@@ -95,7 +92,6 @@ public class SpaceRtsGame extends ApplicationAdapter {
     ashleyEngine.addSystem(particleSystem);
     ashleyEngine.addSystem(renderSystem);
     ashleyEngine.addSystem(consoleSystem);
-    ashleyEngine.addSystem(commandWriteSystem);
 
     world.initWorld(ashleyEngine);
   }

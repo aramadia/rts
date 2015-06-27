@@ -7,10 +7,10 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.fivem.rts.command.Command;
-import com.fivem.rts.CommandManager;
 import com.fivem.rts.command.MoveCommand;
 import com.fivem.rts.component.DestinationComponent;
 import com.fivem.rts.component.SelectionComponent;
+import com.fivem.rts.network.CommandNetwork;
 
 import java.util.ArrayList;
 
@@ -18,11 +18,11 @@ public class CommandReadSystem extends EntitySystem {
 
 
   private static final String TAG = "CommandReadSystem";
-  private final CommandManager commandManager;
+  private final CommandNetwork commandNetwork;
   private Engine engine;
 
-  public CommandReadSystem(CommandManager commandManager) {
-    this.commandManager = commandManager;
+  public CommandReadSystem(CommandNetwork commandNetwork) {
+    this.commandNetwork = commandNetwork;
   }
 
   @Override
@@ -34,7 +34,7 @@ public class CommandReadSystem extends EntitySystem {
   public void update(float deltaTime) {
     // TODO take time into account
 
-    ArrayList<Command> commands = commandManager.getCommands();
+    ArrayList<Command> commands = commandNetwork.receiveCommands();
 
     for (Command command : commands) {
       if (command == null) {

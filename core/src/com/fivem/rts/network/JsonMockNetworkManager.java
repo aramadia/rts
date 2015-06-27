@@ -5,7 +5,7 @@ import com.fivem.rts.command.Command;
 
 import java.util.ArrayList;
 
-public class JsonMockNetworkManager implements NetworkManager {
+public class JsonMockNetworkManager implements CommandNetwork {
 
   private Json json = new Json();
 

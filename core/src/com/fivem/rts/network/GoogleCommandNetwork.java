@@ -11,14 +11,14 @@ import java.util.List;
  * Implementation of network manager using GoogleServiceInterface
  * Created by Daniel on 6/26/2015.
  */
-public class GoogleNetworkManager implements NetworkManager {
+public class GoogleCommandNetwork implements CommandNetwork {
   private GoogleServicesInterface network;
   private ArrayList<Command> queuedCommands = new ArrayList<Command>();
   private Json json = new Json();
-  private final static String TAG = "GoogleNetworkManager";
+  private final static String TAG = "GoogleCommandNetwork";
 
 
-  public GoogleNetworkManager(GoogleServicesInterface network) {
+  public GoogleCommandNetwork(GoogleServicesInterface network) {
     this.network = network;
   }
 

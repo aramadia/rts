@@ -11,25 +11,25 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.fivem.rts.CommandManager;
 import com.fivem.rts.command.Command;
 import com.fivem.rts.SpaceRtsGame;
 import com.fivem.rts.command.MoveCommand;
 import com.fivem.rts.component.*;
+import com.fivem.rts.network.CommandNetwork;
 
 public class InputSystem extends EntitySystem {
 
   private static final int ACCELERATION = 200;
 
   private final OrthographicCamera camera;
-  private final CommandManager commandManager;
+  private final CommandNetwork commandNetwork;
   private final GestureDetector gestureDetector;
 
   private Engine engine;
 
-  public InputSystem(OrthographicCamera camera, CommandManager commandManager) {
+  public InputSystem(OrthographicCamera camera, CommandNetwork commandNetwork) {
     this.camera = camera;
-    this.commandManager = commandManager;
+    this.commandNetwork = commandNetwork;
 
     gestureDetector = new CustomGestureDetector(new GestureHandler());
     Gdx.input.setInputProcessor(gestureDetector);
@@ -134,7 +134,7 @@ public class InputSystem extends EntitySystem {
       }
 
       if (command.entityUuids.size != 0) {
-        commandManager.addCommand(Command.moveCommand(command));
+        commandNetwork.sendCommand(Command.moveCommand(command));
       }
 
       return actionTaken;

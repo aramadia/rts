@@ -4,8 +4,10 @@ import com.fivem.rts.command.Command;
 
 import java.util.ArrayList;
 
-
-public interface NetworkManager {
+/**
+ * Represents a higher level abstraction of a send/receive commands to a room
+ */
+public interface CommandNetwork {
 
   /**
    * Call to obtain list of commands queued since last call.
