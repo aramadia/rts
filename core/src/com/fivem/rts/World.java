@@ -3,6 +3,7 @@ package com.fivem.rts;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -11,16 +12,27 @@ import com.fivem.rts.component.*;
 
 /**
  * Contains helpers to initialize the world.
- * Created by Daniel on 6/25/2015.
  */
 public class World {
+
+  private static final String TAG = World.class.getSimpleName();
+
+  private AssetManager manager;
+
   public void initWorld(Engine engine) {
+    manager = new AssetManager();
+
+    manager.load("zombiewalk.png", Texture.class);
+    manager.load("badlogic.jpg", Texture.class);
+    manager.finishLoading();
+    Gdx.app.log(TAG, "Assets loaded");
+
     for (int i = 0; i < 3; i++) {
       Entity entity = createSmileyEntity(i);
       engine.addEntity(entity);
     }
 
-    for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < 1000; i++) {
       Entity zombie = createZombie(i);
       engine.addEntity(zombie);
     }
@@ -42,7 +54,7 @@ public class World {
 
     text.text = "Zombie" + i;
 
-    animation.sheet = new Texture(Gdx.files.internal("zombiewalk.png")); // #9
+    animation.sheet = manager.get("zombiewalk.png"); // #9
     TextureRegion[][] tmp = TextureRegion.split(animation.sheet, animation.sheet.getWidth()/8,
         animation.sheet.getHeight()/1);              // #10
     animation.frames = new TextureRegion[8 * 1];
@@ -86,7 +98,7 @@ public class World {
 
     text.text = "Entity" + i;
 
-    texture.region = new TextureRegion(new Texture(Gdx.files.internal("badlogic.jpg")));
+    texture.region = new TextureRegion(manager.get("badlogic.jpg", Texture.class));
     transform.position.set(SpaceRtsGame.SCENE_WIDTH * SpaceRtsGame.random.nextFloat() - width * .4f,
         SpaceRtsGame.SCENE_HEIGHT * SpaceRtsGame.random.nextFloat() - height * .4f, 0);
     bounds.setBoundsFromRect(transform.position.x, transform.position.y, width, height);

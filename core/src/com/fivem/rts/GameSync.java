@@ -1,17 +1,12 @@
 package com.fivem.rts;
 
-import com.badlogic.gdx.utils.compression.lzma.Base;
 import com.fivem.rts.command.AckCommand;
 import com.fivem.rts.command.BaseCommand;
 import com.fivem.rts.command.Command;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by Daniel on 6/26/2015.
- */
 public class GameSync {
   private int frame;
   private final static int FRAME_DELAY = 12;

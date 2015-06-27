@@ -9,7 +9,6 @@ import java.util.List;
 
 /**
  * Implementation of network manager using GoogleServiceInterface
- * Created by Daniel on 6/26/2015.
  */
 public class GoogleCommandNetwork implements CommandNetwork {
   private GoogleServicesInterface network;
