@@ -1,6 +1,9 @@
 package com.fivem.rts.desktop;
 
-import com.fivem.rts.GoogleServicesInterface;
+import com.fivem.rts.network.GoogleServicesInterface;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GoogleServicesDesktop implements GoogleServicesInterface {
   @Override
@@ -24,7 +27,9 @@ public class GoogleServicesDesktop implements GoogleServicesInterface {
   }
 
   @Override
-  public void receiveMessage(String playerId, byte[] message) {
-
+  public List<Message> receiveMessages() {
+    return new ArrayList<Message>();
   }
+
+
 }

@@ -1,21 +1,16 @@
 package com.fivem.rts;
 
 import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.fivem.rts.component.*;
+import com.fivem.rts.network.GoogleNetworkManager;
+import com.fivem.rts.network.GoogleServicesInterface;
 import com.fivem.rts.network.NetworkManager;
 import com.fivem.rts.system.*;
 
@@ -50,9 +45,9 @@ public class SpaceRtsGame extends ApplicationAdapter {
   private SpriteBatch spriteBatch;
   private World world;
 
-  public SpaceRtsGame(GoogleServicesInterface googleServicesInterface, NetworkManager networkManager){
+  public SpaceRtsGame(GoogleServicesInterface googleServicesInterface){
     this.googleServicesInterface = googleServicesInterface;
-    this.networkManager = networkManager;
+    this.networkManager = new GoogleNetworkManager(googleServicesInterface);
     this.random = new Random(79);
   }
 

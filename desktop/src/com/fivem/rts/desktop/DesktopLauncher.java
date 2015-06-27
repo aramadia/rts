@@ -9,7 +9,7 @@ public class DesktopLauncher {
     LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
     config.width = (int) SpaceRtsGame.SCENE_WIDTH;
     config.height = (int) SpaceRtsGame.SCENE_HEIGHT;
-    new DesktopConsoleApplication(new SpaceRtsGame(new GoogleServicesDesktop(), new JsonMockNetworkManager()), config);
+    new DesktopConsoleApplication(new SpaceRtsGame(new GoogleServicesDesktop()), config);
   }
 
 }

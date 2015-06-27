@@ -2,9 +2,13 @@ package com.fivem.rts;
 
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration;
+import com.fivem.rts.network.GoogleServicesInterface;
 import com.fivem.rts.network.JsonMockNetworkManager;
 import org.robovm.apple.foundation.NSAutoreleasePool;
 import org.robovm.apple.uikit.UIApplication;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class IOSLauncher extends IOSApplication.Delegate {
   @Override
@@ -33,12 +37,14 @@ public class IOSLauncher extends IOSApplication.Delegate {
       }
 
       @Override
-      public void receiveMessage(String playerId, byte[] message) {
-
+      public List<Message> receiveMessages() {
+        return new ArrayList<Message>();
       }
+
+
     };
 
-    return new IOSConsoleApplication(new SpaceRtsGame(googleServicesInterface, new JsonMockNetworkManager()), config);
+    return new IOSConsoleApplication(new SpaceRtsGame(googleServicesInterface), config);
   }
 
   public static void main(String[] argv) {

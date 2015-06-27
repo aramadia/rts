@@ -1,4 +1,6 @@
-package com.fivem.rts;
+package com.fivem.rts.network;
+
+import java.util.List;
 
 /**
  * Hides all Google Player Services implementations so it can be used
@@ -19,15 +21,21 @@ public interface GoogleServicesInterface {
   void automatch();
 
   /**
-   * Send message to all parties in the room
+   * Send message to all parties in the room (including yourself)
    * @param message
    */
   void broadcastMessage(byte[] message);
 
+  class Message {
+    //Identifier of the sending participant
+    public String playerId;
+
+    // Message Payload
+    public byte[] message;
+  }
+
   /**
-   * Received a message from a room
-   * @param playerId Identifier of the sending participant
-   * @param message Message Payload
+   * Receive all messages from the room since being called.
    */
-  void receiveMessage(String playerId, byte[] message);
+  List<Message> receiveMessages();
 }

@@ -6,12 +6,8 @@ import android.view.WindowManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.badlogic.gdx.utils.Json;
-import com.fivem.rts.command.Command;
-import com.fivem.rts.GoogleServicesInterface;
+import com.fivem.rts.network.GoogleServicesInterface;
 import com.fivem.rts.SpaceRtsGame;
-import com.fivem.rts.command.RoomConnectedCommand;
-import com.fivem.rts.network.NetworkManager;
 import com.fivem.rts.system.ConsoleSystem;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesStatusCodes;
@@ -21,10 +17,11 @@ import com.google.example.games.basegameutils.GameHelper;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class AndroidLauncher extends AndroidApplication implements GoogleServicesInterface, RoomUpdateListener,
-        RealTimeMessageReceivedListener, NetworkManager {
+        RealTimeMessageReceivedListener {
 
   private static final String TAG = "AndroidImpl";
   GameHelper gameHelper;
@@ -32,15 +29,14 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
   String roomId;
   String myParticipantId;
   private ArrayList<Participant> participants = new ArrayList<Participant>();
-  Json json = new Json();
-  private ArrayList<Command> queuedCommands = new ArrayList<Command>();
 
+  private ArrayList<GoogleServicesInterface.Message> queuedMessages = new ArrayList<Message>();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-    initialize(new SpaceRtsGame(this, this), config);
+    initialize(new SpaceRtsGame(this), config);
 
     gameHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);
     gameHelper.enableDebugLog(true);
@@ -146,13 +142,15 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
 
     Gdx.app.log(TAG, "My participant Id " + myParticipantId);
 
-    RoomConnectedCommand roomCmd = new RoomConnectedCommand();
-    roomCmd.myId = myParticipantId;
-    roomCmd.participants = new ArrayList<String>();
-    for (Participant p : participants) {
-      roomCmd.participants.add(p.getParticipantId());
-    }
-    queuedCommands.add(Command.roomConnectedCommand(roomCmd));
+//    RoomConnectedCommand roomCmd = new RoomConnectedCommand();
+//    roomCmd.myId = myParticipantId;
+//    roomCmd.participants = new ArrayList<String>();
+//    for (Participant p : participants) {
+//      roomCmd.participants.add(p.getParticipantId());
+//    }
+//
+//
+//    queuedCommands.add(Command.roomConnectedCommand(roomCmd));
   }
 
   @Override
@@ -196,15 +194,19 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
 
   @Override
   public void onRealTimeMessageReceived(RealTimeMessage rtm) {
-    receiveMessage(rtm.getSenderParticipantId(), rtm.getMessageData());
+    Message msg = new Message();
+    msg.playerId = rtm.getSenderParticipantId();
+    msg.message = rtm.getMessageData();
+
+    queuedMessages.add(msg);
+
   }
 
   @Override
-  public void receiveMessage(String playerId, byte[] message) {
-    String s = new String(message);
-    Gdx.app.log(TAG, "received " + s + " from " + playerId);
-
-    queuedCommands.add(json.fromJson(Command.class, s));
+  public List<Message> receiveMessages() {
+    ArrayList<Message> temp = new ArrayList<>(queuedMessages);
+    queuedMessages.clear();
+    return temp;
   }
 
   @Override
@@ -218,25 +220,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
     }
   }
 
-  @Override
-  public ArrayList<Command> receiveCommands() {
-    ArrayList<Command> temp = new ArrayList<Command>(queuedCommands);
-    queuedCommands.clear();
-    return temp;
-  }
-
-  @Override
-  public void sendCommand(Command command) {
-    if (command == null) {
-      return;
-    }
-    String serializedCommand = json.toJson(command);
-    Gdx.app.log(TAG, "Sending command " + serializedCommand);
-    broadcastMessage(serializedCommand.getBytes());
-
-    // Since you don't get broadcasted messages, add it to the queue here.
-    queuedCommands.add(command);
-  }
 
   @Override
   public void log(String tag, String message) {
