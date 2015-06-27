@@ -27,11 +27,15 @@ public class World {
     manager.finishLoading();
     Gdx.app.log(TAG, "Assets loaded");
 
-    for (int i = 0; i < 3; i++) {
+    resetWorld(engine);
+  }
+
+  public void resetWorld(Engine engine) {
+    for (int i = 0; i < 1; i++) {
       engine.addEntity(createSmileyEntity(i));
     }
 
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < 20; i++) {
       engine.addEntity(createZombie(i));
     }
   }

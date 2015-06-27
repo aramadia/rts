@@ -1,5 +1,6 @@
 package com.fivem.rts.network;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +20,17 @@ public interface GoogleServicesInterface {
    * 4. Game starts.
    */
   void automatch();
+
+  class GoogleRoom {
+    public String myId;
+    public ArrayList<String> participantIds = new ArrayList<String>();
+  }
+
+  /**
+   * Poll to determine if room has been created
+   * @return null if no room has been formed
+   */
+  GoogleRoom connected();
 
   /**
    * Send message to all parties in the room (including yourself)

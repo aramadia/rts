@@ -6,6 +6,10 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
+import com.fivem.rts.GameSync;
+import com.fivem.rts.SpaceRtsGame;
+import com.fivem.rts.World;
+import com.fivem.rts.command.AckCommand;
 import com.fivem.rts.command.Command;
 import com.fivem.rts.command.MoveCommand;
 import com.fivem.rts.component.DestinationComponent;
@@ -19,10 +23,12 @@ public class CommandReadSystem extends EntitySystem {
   private static final String TAG = CommandReadSystem.class.getSimpleName();
 
   private final CommandNetwork commandNetwork;
+  private final GameSync sync;
   private Engine engine;
 
-  public CommandReadSystem(CommandNetwork commandNetwork) {
+  public CommandReadSystem(CommandNetwork commandNetwork, GameSync sync) {
     this.commandNetwork = commandNetwork;
+    this.sync = sync;
   }
 
   @Override
@@ -36,13 +42,24 @@ public class CommandReadSystem extends EntitySystem {
 
     ArrayList<Command> commands = commandNetwork.receiveCommands();
 
-    for (Command command : commands) {
+    ArrayList<Command> currentFrameCommands = sync.startFrame(commands);
+
+    for (Command command : currentFrameCommands) {
       if (command == null) {
         return;
       }
       Gdx.app.log(TAG, "Running: " + command.toString());
 
       switch(command.type) {
+        case START:
+          sync.reset(SpaceRtsGame.NUM_PLAYERS);
+          engine.removeAllEntities();
+          SpaceRtsGame.world.resetWorld(engine);
+          break;
+        case ACK:
+          AckCommand ack = command.ackCommand;
+          break;
+
         case MOVE:
 
           MoveCommand moveCommand = command.moveCommand;

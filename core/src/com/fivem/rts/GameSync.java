@@ -10,6 +10,7 @@ import java.util.HashMap;
 public class GameSync {
   private int frame;
   private final static int FRAME_DELAY = 12;
+  private int acksNeeded = 1;
 
   private HashMap<Integer, CommandBuffer> commandBuffer = new HashMap<Integer, CommandBuffer>();
 
@@ -21,6 +22,12 @@ public class GameSync {
 
     // Number of clients acknowledged for this command
     int acknowledged;
+  }
+
+  public void reset(int acksNeeded) {
+    this.acksNeeded = acksNeeded;
+    commandBuffer.clear();
+    frame = 0;
   }
 
 
@@ -72,6 +79,11 @@ public class GameSync {
 
     }
 
+    // Priming the sync manager, all frames < FRAME_DELAY should be free
+    if (frame < FRAME_DELAY) {
+      return new ArrayList<Command>();
+    }
+
     // Get current frame
     CommandBuffer buf = commandBuffer.get(frame);
 
@@ -81,7 +93,7 @@ public class GameSync {
     }
 
     // If everyone acknowledge this frame, execute these commands
-    if (buf.acknowledged == SpaceRtsGame.NUM_PLAYERS) {
+    if (buf.acknowledged == acksNeeded) {
       outCommands.addAll(buf.commands);
       commandBuffer.remove(frame);
       return outCommands;
@@ -94,8 +106,9 @@ public class GameSync {
    * Synchronizes a command to run at a certain frame.
    * @param c
    */
-  public void synchronizeCommand(Command c) {
+  public Command synchronizeCommand(Command c) {
     c.getCommand().syncTime = frame + FRAME_DELAY;
+    return c;
   }
 }
 

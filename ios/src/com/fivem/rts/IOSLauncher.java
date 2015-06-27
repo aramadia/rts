@@ -32,6 +32,11 @@ public class IOSLauncher extends IOSApplication.Delegate {
       }
 
       @Override
+      public GoogleRoom connected() {
+        return null;
+      }
+
+      @Override
       public void broadcastMessage(byte[] message) {
 
       }

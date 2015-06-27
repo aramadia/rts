@@ -28,9 +28,11 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
 
   String roomId;
   String myParticipantId;
+  private GoogleRoom googleRoom;
   private ArrayList<Participant> participants = new ArrayList<Participant>();
 
   private ArrayList<GoogleServicesInterface.Message> queuedMessages = new ArrayList<Message>();
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -142,15 +144,12 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
 
     Gdx.app.log(TAG, "My participant Id " + myParticipantId);
 
-//    RoomConnectedCommand roomCmd = new RoomConnectedCommand();
-//    roomCmd.myId = myParticipantId;
-//    roomCmd.participants = new ArrayList<String>();
-//    for (Participant p : participants) {
-//      roomCmd.participants.add(p.getParticipantId());
-//    }
-//
-//
-//    queuedCommands.add(Command.roomConnectedCommand(roomCmd));
+    googleRoom = new GoogleRoom();
+    googleRoom.myId = myParticipantId;
+    for (Participant p : participants) {
+      googleRoom.participantIds.add(p.getParticipantId());
+    }
+
   }
 
   @Override
@@ -190,6 +189,11 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
 
     // prevent screen from sleeping during handshake
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+  }
+
+  @Override
+  public GoogleRoom connected() {
+    return googleRoom;
   }
 
   @Override

@@ -42,7 +42,8 @@ public class SpaceRtsGame extends ApplicationAdapter {
   private CommandNetwork commandNetwork;
 
   private SpriteBatch spriteBatch;
-  private World world;
+  public static World world;
+  private GameSync sync;
 
   public SpaceRtsGame(GoogleServicesInterface googleServicesInterface){
     this.googleServicesInterface = googleServicesInterface;
@@ -71,25 +72,30 @@ public class SpaceRtsGame extends ApplicationAdapter {
     camera.update();
 
     spriteBatch = new SpriteBatch();
+    sync = new GameSync();
 
     ashleyEngine = new Engine();
 
-    CommandReadSystem commandReadSystem = new CommandReadSystem(commandNetwork);
-    InputSystem inputSystem = new InputSystem(camera, commandNetwork);
+    RoomManagementSystem roomManagementSystem = new RoomManagementSystem(googleServicesInterface, commandNetwork, sync);
+    CommandReadSystem commandReadSystem = new CommandReadSystem(commandNetwork, sync);
+    InputSystem inputSystem = new InputSystem(camera, commandNetwork, sync);
     MovementSystem movementSystem = new MovementSystem();
     ShootingSystem shootingSystem = new ShootingSystem();
     CollisionSystem collisionSystem = new CollisionSystem();
     ParticleSystem particleSystem = new ParticleSystem();
+    CommandWriteSystem commandWriteSystem = new CommandWriteSystem(commandNetwork, sync);
     RenderSystem renderSystem = new RenderSystem(camera, spriteBatch);
     ConsoleSystem consoleSystem = new ConsoleSystem(viewportHud);
 
     // Order matters
+    ashleyEngine.addSystem(roomManagementSystem);
     ashleyEngine.addSystem(commandReadSystem);
     ashleyEngine.addSystem(inputSystem);
     ashleyEngine.addSystem(movementSystem);
     ashleyEngine.addSystem(shootingSystem);
     ashleyEngine.addSystem(collisionSystem);
     ashleyEngine.addSystem(particleSystem);
+    ashleyEngine.addSystem(commandWriteSystem);
     ashleyEngine.addSystem(renderSystem);
     ashleyEngine.addSystem(consoleSystem);
 

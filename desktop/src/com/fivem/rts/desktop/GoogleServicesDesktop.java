@@ -22,6 +22,11 @@ public class GoogleServicesDesktop implements GoogleServicesInterface {
   }
 
   @Override
+  public GoogleRoom connected() {
+    return null;
+  }
+
+  @Override
   public void broadcastMessage(byte[] message) {
 
   }
