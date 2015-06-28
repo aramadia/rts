@@ -1,6 +1,7 @@
 package com.fivem.rts.system;
 
 import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -12,6 +13,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.fivem.rts.SpaceRtsGame;
 
 public class ConsoleSystem extends EntitySystem {
+
+  private static final String TAG = ConsoleSystem.class.getSimpleName();
 
   public static boolean CONSOLE_ENABLED = false;
 
@@ -31,11 +34,23 @@ public class ConsoleSystem extends EntitySystem {
 
     public Label.LabelStyle getStyle() {
       if (style == null) {
-        style = new Label.LabelStyle(new BitmapFont(), color);
+        BitmapFont font = new BitmapFont();
+        font.getData().setScale(getFontScale());
+        style = new Label.LabelStyle(font, color);
       }
 
       return style;
     }
+  }
+
+  private static float getFontScale() {
+    float density = Gdx.app.getGraphics().getDensity();
+    if (density < 1) {
+      density = 1;
+    }
+
+    Gdx.app.log(TAG, "Font density " + density);
+    return density;
   }
 
   private final Stage stage;
@@ -47,6 +62,7 @@ public class ConsoleSystem extends EntitySystem {
   public ConsoleSystem(Viewport viewport) {
     this.stage = new Stage(viewport);
     this.font = new BitmapFont();
+    this.font.getData().setScale(getFontScale());
     this.font.setColor(Color.RED);
 
     titleStyle = new Label.LabelStyle(font, Color.BLUE);

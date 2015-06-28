@@ -74,7 +74,7 @@ public class GameSync {
 
   public void setHash(int hashCode) {
     //  THe current frame has this hashCode
-    Gdx.app.log(TAG, "Frame: " + frame + " Hash: " + hashCode);
+    Gdx.app.debug(TAG, "Frame: " + frame + " Hash: " + hashCode);
   }
 
   /**
