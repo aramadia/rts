@@ -49,6 +49,8 @@ public class GameSync {
 
   private int logOnceFrame = 0;
 
+
+
   class CommandBuffer {
     // Frame these commands should execute
     int frame;
@@ -70,6 +72,10 @@ public class GameSync {
     return frame;
   }
 
+  public void setHash(int hashCode) {
+    //  THe current frame has this hashCode
+    Gdx.app.log(TAG, "Frame: " + frame + " Hash: " + hashCode);
+  }
 
   /**
    * Create an ack packet to send to indicate this frame is over.

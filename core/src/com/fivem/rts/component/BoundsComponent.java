@@ -20,4 +20,19 @@ public class BoundsComponent extends Component {
     // TODO move this somewhere else
     rect.set(x, y, width, height);
   }
+
+
+  @Override
+  public int hashCode() {
+    int hash = 1;
+
+    float v[] = polygon.getVertices();
+    for (int i = 0; i < v.length; i++) {
+      hash = 37 * hash + Float.floatToIntBits(v[i]);
+    }
+
+    hash = 37 * hash + rect.hashCode();
+
+    return hash;
+  }
 }

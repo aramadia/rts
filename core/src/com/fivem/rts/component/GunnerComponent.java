@@ -16,4 +16,14 @@ public class GunnerComponent extends Component {
 
   public float bulletSpeed = 1400.0f;
 
+  @Override
+  public int hashCode() {
+    int hash = 1;
+    hash = 37 * hash + Float.floatToIntBits(reloadProgress);
+    hash = 37 * hash + Float.floatToIntBits(reloadTime);
+    hash = 37 * hash + Float.floatToIntBits(bulletSpeed);
+
+    return hash;
+  }
+
 }

@@ -92,6 +92,7 @@ public class SpaceRtsGame extends ApplicationAdapter {
     ShootingSystem shootingSystem = new ShootingSystem();
     CollisionSystem collisionSystem = new CollisionSystem();
     ParticleSystem particleSystem = new ParticleSystem();
+    HashingSystem hashingSystem = new HashingSystem();
     CommandWriteSystem commandWriteSystem = new CommandWriteSystem(commandNetwork, sync);
     RenderSystem renderSystem = new RenderSystem(camera, spriteBatch);
     ConsoleSystem consoleSystem = new ConsoleSystem(viewportHud);
@@ -104,6 +105,7 @@ public class SpaceRtsGame extends ApplicationAdapter {
     ashleyEngine.addSystem(shootingSystem);
     ashleyEngine.addSystem(collisionSystem);
     ashleyEngine.addSystem(particleSystem);
+    ashleyEngine.addSystem(hashingSystem);
     ashleyEngine.addSystem(commandWriteSystem);
     ashleyEngine.addSystem(renderSystem);
     ashleyEngine.addSystem(consoleSystem);

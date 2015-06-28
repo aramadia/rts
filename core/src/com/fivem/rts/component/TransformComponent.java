@@ -13,4 +13,15 @@ public class TransformComponent extends Component {
   public final Vector2 scale = new Vector2(1.0f, 1.0f);
   // the angle of counter clockwise rotation of the rectangle around originX/originY
   public float rotation = 0.0f;
+
+  @Override
+  public int hashCode() {
+    int hash = 1;
+    hash = 37 * hash + position.hashCode();
+    hash = 37 * hash + scale.hashCode();
+    hash = 37 * hash + Float.floatToIntBits(rotation);
+
+    return hash;
+  }
+
 }
