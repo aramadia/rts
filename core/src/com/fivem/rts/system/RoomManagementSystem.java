@@ -48,9 +48,7 @@ public class RoomManagementSystem extends EntitySystem {
       Gdx.app.log(TAG, "Connected, sending start command");
       SpaceRtsGame.gameStatus = "Connected to Room";
       StartCommand start = new StartCommand();
-      Command cmd = new Command();
-      cmd.startCommand = start;
-      commandNetwork.sendCommand(cmd);
+      commandNetwork.sendCommand(Command.startCommand(start));
 
     }
   }

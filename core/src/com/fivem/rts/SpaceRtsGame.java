@@ -34,7 +34,7 @@ public class SpaceRtsGame extends ApplicationAdapter {
   // easily when we need to increase the player count
   public static final int NUM_PLAYERS = 2;
 
-  public static Random random;
+
 
   private OrthographicCamera camera;
   private OrthographicCamera cameraHud;
@@ -52,6 +52,7 @@ public class SpaceRtsGame extends ApplicationAdapter {
   // TODO Consider removing the static
   public static World world;
   public static GameSync sync;
+  public static Random random;
 
   public SpaceRtsGame(GoogleServicesInterface googleServicesInterface){
     this.googleServicesInterface = googleServicesInterface;

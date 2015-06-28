@@ -60,6 +60,13 @@ import java.io.Serializable;
     return command;
   }
 
+  public static Command startCommand(StartCommand cmd) {
+    Command command = new Command();
+    command.startCommand = cmd;
+    command.type = Type.START;
+    return command;
+  }
+
   public BaseCommand getCommand() {
     switch(type) {
       case MOVE:
