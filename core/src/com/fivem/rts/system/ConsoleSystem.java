@@ -21,10 +21,19 @@ public class ConsoleSystem extends EntitySystem {
     LOG(Color.WHITE),
     ERROR(Color.RED);
 
-    public Label.LabelStyle style;
+    private final Color color;
+    private Label.LabelStyle style;
 
     LogLevel(Color color) {
-      style = new Label.LabelStyle(new BitmapFont(), color);
+      this.color = color;
+    }
+
+    public Label.LabelStyle getStyle() {
+      if (style == null) {
+        style = new Label.LabelStyle(new BitmapFont(), color);
+      }
+
+      return style;
     }
   }
 

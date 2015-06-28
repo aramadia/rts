@@ -1,7 +1,6 @@
 package com.fivem.rts;
 
 import com.badlogic.ashley.core.Engine;
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -10,9 +9,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.fivem.rts.network.CommandNetwork;
 import com.fivem.rts.network.GoogleCommandNetwork;
 import com.fivem.rts.network.GoogleServicesInterface;
-import com.fivem.rts.network.CommandNetwork;
 import com.fivem.rts.system.*;
 
 import java.util.Random;
