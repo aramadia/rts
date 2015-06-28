@@ -15,7 +15,7 @@ public class IOSConsoleApplication extends IOSApplication {
   public void debug(String tag, String message) {
     super.debug(tag, message);
 //    if (logLevel >= LOG_DEBUG) {
-      ConsoleSystem.addLog(tag, message);
+      ConsoleSystem.debug(tag, message);
 //    }
   }
 
@@ -23,7 +23,7 @@ public class IOSConsoleApplication extends IOSApplication {
   public void debug(String tag, String message, Throwable exception) {
     super.debug(tag, message, exception);
 //    if (logLevel >= LOG_DEBUG) {
-      ConsoleSystem.addLog(tag, message, exception);
+      ConsoleSystem.debug(tag, message, exception);
 //    }
   }
 
@@ -31,7 +31,7 @@ public class IOSConsoleApplication extends IOSApplication {
   public void log(String tag, String message) {
     super.log(tag, message);
 //    if (logLevel >= LOG_INFO) {
-      ConsoleSystem.addLog(tag, message);
+      ConsoleSystem.log(tag, message);
 //    }
   }
 
@@ -39,7 +39,7 @@ public class IOSConsoleApplication extends IOSApplication {
   public void log(String tag, String message, Throwable exception) {
     super.log(tag, message, exception);
 //    if (logLevel >= LOG_INFO) {
-      ConsoleSystem.addLog(tag, message, exception);
+      ConsoleSystem.log(tag, message, exception);
 //    }
   }
 
@@ -47,7 +47,7 @@ public class IOSConsoleApplication extends IOSApplication {
   public void error(String tag, String message) {
     super.error(tag, message);
 //    if (logLevel >= LOG_ERROR) {
-      ConsoleSystem.addLog(tag, message);
+      ConsoleSystem.error(tag, message);
 //    }
   }
 
@@ -55,7 +55,7 @@ public class IOSConsoleApplication extends IOSApplication {
   public void error(String tag, String message, Throwable exception) {
     super.error(tag, message, exception);
 //    if (logLevel >= LOG_ERROR) {
-      ConsoleSystem.addLog(tag, message, exception);
+      ConsoleSystem.error(tag, message, exception);
 //    }
   }
 }

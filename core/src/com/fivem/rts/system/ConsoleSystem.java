@@ -14,10 +14,21 @@ public class ConsoleSystem extends EntitySystem {
 
   public static boolean CONSOLE_ENABLED = false;
 
-  private static Array<String> logs = new Array<String>();
+  private static Array<LogEntry> logEntries = new Array<LogEntry>();
+
+  enum LogLevel {
+    DEBUG(Color.GREEN),
+    LOG(Color.WHITE),
+    ERROR(Color.RED);
+
+    public Label.LabelStyle style;
+
+    LogLevel(Color color) {
+      style = new Label.LabelStyle(new BitmapFont(), color);
+    }
+  }
 
   private final Stage stage;
-  private final Label.LabelStyle style;
   private final Label.LabelStyle titleStyle;
   private BitmapFont font;
   private ScrollPane scrollPane;
@@ -28,7 +39,6 @@ public class ConsoleSystem extends EntitySystem {
     this.font = new BitmapFont();
     this.font.setColor(Color.RED);
 
-    style = new Label.LabelStyle(font, Color.GREEN);
     titleStyle = new Label.LabelStyle(font, Color.BLUE);
     table = new Table();
 
@@ -50,10 +60,11 @@ public class ConsoleSystem extends EntitySystem {
       return;
     }
 
+    // TODO print exception
     table.clear();
     table.add(new Label("CONSOLE", titleStyle)).expandX().fillX().top().left().padLeft(4).row();
-    for (String message : logs) {
-      table.add(new Label(message, style)).expandX().fillX().top().left().padLeft(4).row();
+    for (LogEntry logEntry : logEntries) {
+      table.add(new Label(logEntry.message, logEntry.logLevel.style)).expandX().fillX().top().left().padLeft(4).row();
     }
 
     scrollPane.validate();
@@ -63,13 +74,48 @@ public class ConsoleSystem extends EntitySystem {
     stage.draw();
   }
 
-  public static void addLog(String tag, String message) {
-    logs.add(message);
+  public static void debug(String tag, String message) {
+    debug(tag, message, null);
   }
 
-  public static void addLog(String tag, String message, Throwable exception) {
-    logs.add(message);
-    // TODO print exception
+  public static void debug(String tag, String message, Throwable exception) {
+    logEntries.add(new LogEntry(LogLevel.DEBUG, tag, message, exception));
+  }
+
+  public static void log(String tag, String message) {
+    log(tag, message, null);
+  }
+
+  public static void log(String tag, String message, Throwable exception) {
+    logEntries.add(new LogEntry(LogLevel.LOG, tag, message, exception));
+  }
+
+  public static void error(String tag, String message) {
+    error(tag, message, null);
+  }
+
+  public static void error(String tag, String message, Throwable exception) {
+    logEntries.add(new LogEntry(LogLevel.ERROR, tag, message, exception));
+  }
+
+  private static class LogEntry {
+    public LogLevel logLevel;
+    public String tag;
+    public String message;
+    public Throwable exception;
+
+    public LogEntry(LogLevel logLevel, String tag, String message) {
+      this.logLevel = logLevel;
+      this.tag = tag;
+      this.message = message;
+    }
+
+    public LogEntry(LogLevel logLevel, String tag, String message, Throwable exception) {
+      this.logLevel = logLevel;
+      this.tag = tag;
+      this.message = message;
+      this.exception = exception;
+    }
   }
 
 }
