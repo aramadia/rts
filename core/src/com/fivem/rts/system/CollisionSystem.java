@@ -1,6 +1,9 @@
 package com.fivem.rts.system;
 
-import com.badlogic.ashley.core.*;
+import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
@@ -36,7 +39,13 @@ public class CollisionSystem extends EntitySystem {
       BoundsComponent bounds = screenBoundEntity.getComponent(BoundsComponent.class);
       MovementComponent movement = screenBoundEntity.getComponent(MovementComponent.class);
 
-      Vector2[] screenCoords = {new Vector2(0,0), new Vector2(SpaceRtsGame.SCENE_WIDTH, 0), new Vector2(SpaceRtsGame.SCENE_WIDTH, SpaceRtsGame.SCENE_HEIGHT), new Vector2(0, SpaceRtsGame.SCENE_HEIGHT)};
+      Vector2[] screenCoords = {
+          new Vector2(0, 0),
+          new Vector2(SpaceRtsGame.SCENE_WIDTH, 0),
+          new Vector2(SpaceRtsGame.SCENE_WIDTH, SpaceRtsGame.SCENE_HEIGHT),
+          new Vector2(0, SpaceRtsGame.SCENE_HEIGHT)
+      };
+
       // Collide with bottom wall
       if (movement.velocity.y < 0 && Intersector.intersectSegmentPolygon(screenCoords[0], screenCoords[1], bounds.polygon)) {
         movement.velocity.y *= -1;
@@ -64,7 +73,7 @@ public class CollisionSystem extends EntitySystem {
     BoundsComponent bounds2;
     for (int i = 0; i < entities.size(); i++) {
       entity = entities.get(i);
-      for (int j = i+1; j < entities.size(); j++) {
+      for (int j = i + 1; j < entities.size(); j++) {
         entity2 = entities.get(j);
         bounds = entity.getComponent(BoundsComponent.class);
         bounds2 = entity2.getComponent(BoundsComponent.class);
@@ -72,25 +81,40 @@ public class CollisionSystem extends EntitySystem {
             && Intersector.overlapConvexPolygons(bounds.polygon, bounds2.polygon)) {
           if (entity.getComponent(BulletComponent.class) != null) {
             if (entity2.getComponent(ZombieComponent.class) != null) {
-              // kill zombie
-              Gdx.app.log(TAG, "Killed zombie " + entity2.getComponent(TextComponent.class).text);
-              engine.removeEntity(entity2);
-              engine.removeEntity(entity);
-
-              engine.addEntity(createBloodEntity(entity2));
+              handleCollision(entity2, entity);
             }
           } else if (entity.getComponent(ZombieComponent.class) != null) {
             if (entity2.getComponent(BulletComponent.class) != null) {
-              // kill zombie
-              Gdx.app.log(TAG, "Killed zombie " + entity.getComponent(TextComponent.class).text);
-              engine.removeEntity(entity2);
-              engine.removeEntity(entity);
-
-              engine.addEntity(createBloodEntity(entity));
+              handleCollision(entity, entity2);
             }
           }
         }
       }
+    }
+  }
+
+  /**
+   * Applies damage and kills zombie if applicable
+   *
+   * @param zombie must contain ZombieComponent
+   * @param bullet must contain BulletComponent
+   */
+  private void handleCollision(Entity zombie, Entity bullet) {
+    ZombieComponent zombieComponent = zombie.getComponent(ZombieComponent.class);
+    TextComponent zombieTextComponent = zombie.getComponent(TextComponent.class);
+    BulletComponent bulletComponent = bullet.getComponent(BulletComponent.class);
+
+    zombieComponent.health -= bulletComponent.damage;
+
+//    Gdx.app.log(TAG, zombieTextComponent.text + " has " + zombieComponent.health + ".");
+
+    engine.removeEntity(bullet);
+
+    if (zombieComponent.health <= 0) {
+      // kill the zombie
+      Gdx.app.log(TAG, zombieTextComponent.text + " was killed.");
+      engine.removeEntity(zombie);
+      engine.addEntity(createBloodEntity(zombie));
     }
   }
 
