@@ -34,7 +34,7 @@ public class World {
     SpaceRtsGame.random.setSeed(1337);
 
     for (int i = 0; i < 1; i++) {
-      engine.addEntity(createSmileyEntity(i));
+      engine.addEntity(createPlayerEntity(i));
     }
 
     for (int i = 0; i < 40; i++) {
@@ -73,7 +73,6 @@ public class World {
         SpaceRtsGame.SCENE_HEIGHT * SpaceRtsGame.random.nextFloat() - height * .4f, 0);
     transform.scale.set(0.5f, 0.5f);
     bounds.setBoundsFromRect(transform.position.x, transform.position.y, width, height);
-    movement.velocity.set(100, 0).setAngleRad(MathUtils.PI2 * SpaceRtsGame.random.nextFloat());
 
     entity.add(animation);
     entity.add(transform);
@@ -86,7 +85,7 @@ public class World {
     return entity;
   }
 
-  private Entity createSmileyEntity(int i) {
+  private Entity createPlayerEntity(int i) {
     Entity entity = new Entity();
 
     TextureComponent texture = new TextureComponent();
@@ -96,9 +95,10 @@ public class World {
     TextComponent text = new TextComponent();
     GunnerComponent gunner = new GunnerComponent();
     SelectionComponent selection = new SelectionComponent();
+    PlayerComponent player = new PlayerComponent();
 
-    int width = 100;
-    int height = 100;
+    int width = 50;
+    int height = 50;
 
     text.text = "Entity" + i;
 
@@ -118,6 +118,7 @@ public class World {
     entity.add(text);
     entity.add(gunner);
     entity.add(selection);
+    entity.add(player);
 
     return entity;
   }
