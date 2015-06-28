@@ -53,11 +53,12 @@ public class SpaceRtsGame extends ApplicationAdapter {
   // TODO Consider removing the static
   public static World world;
   public static GameSync sync;
-  public static Random random = new Random(79);
+  public static Random random;
 
-  public SpaceRtsGame(GoogleServicesInterface googleServicesInterface) {
+  public SpaceRtsGame(GoogleServicesInterface googleServicesInterface){
     this.googleServicesInterface = googleServicesInterface;
     this.commandNetwork = new GoogleCommandNetwork(googleServicesInterface);
+    random = new Random(79);
   }
 
   @Override
@@ -87,7 +88,6 @@ public class SpaceRtsGame extends ApplicationAdapter {
 
     RoomManagementSystem roomManagementSystem = new RoomManagementSystem(googleServicesInterface, commandNetwork, sync);
     CommandReadSystem commandReadSystem = new CommandReadSystem(commandNetwork, sync);
-    AiSystem aiSystem = new AiSystem();
     InputSystem inputSystem = new InputSystem(camera, commandNetwork, sync);
     MovementSystem movementSystem = new MovementSystem();
     ShootingSystem shootingSystem = new ShootingSystem();
@@ -101,7 +101,6 @@ public class SpaceRtsGame extends ApplicationAdapter {
     // Order matters
     ashleyEngine.addSystem(roomManagementSystem);
     ashleyEngine.addSystem(commandReadSystem);
-    ashleyEngine.addSystem(aiSystem);
     ashleyEngine.addSystem(inputSystem);
     ashleyEngine.addSystem(movementSystem);
     ashleyEngine.addSystem(shootingSystem);

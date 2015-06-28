@@ -39,15 +39,15 @@ public class MovementSystem extends IteratingSystem {
     if (destination != null) {
       // dumb movement at static speed towards target
       if (destination.position.x < transform.position.x) {
-        movement.acceleration.x = -30;
+        movement.acceleration.x = -100;
       } else {
-        movement.acceleration.x = 30;
+        movement.acceleration.x = 100;
       }
 
       if (destination.position.y < transform.position.y) {
-        movement.acceleration.y = -30;
+        movement.acceleration.y = -100;
       } else {
-        movement.acceleration.y = 30;
+        movement.acceleration.y = 100;
       }
 
 
