@@ -13,17 +13,11 @@ public class CollisionSystem extends EntitySystem {
 
   private static final String TAG = CollisionSystem.class.getSimpleName();
 
-  private final ComponentMapper<BoundsComponent> boundsMapper;
-  private final ComponentMapper<MovementComponent> movementMapper;
-
   private ImmutableArray<Entity> entities;
   private Engine engine;
 
   public CollisionSystem() {
     super();
-
-    boundsMapper = ComponentMapper.getFor(BoundsComponent.class);
-    movementMapper = ComponentMapper.getFor(MovementComponent.class);
   }
 
   @Override
@@ -34,10 +28,13 @@ public class CollisionSystem extends EntitySystem {
 
   @Override
   public void update(float deltaTime) {
-    for (int i = 0; i < entities.size(); ++i) {
-      Entity entity = entities.get(i);
-      BoundsComponent bounds = boundsMapper.get(entity);
-      MovementComponent movement = movementMapper.get(entity);
+    ImmutableArray<Entity> screenBoundEntities = engine.getEntitiesFor(
+        Family.all(BoundsComponent.class, MovementComponent.class, TransformComponent.class)
+            .exclude(BulletComponent.class).get());
+
+    for (Entity screenBoundEntity : screenBoundEntities) {
+      BoundsComponent bounds = screenBoundEntity.getComponent(BoundsComponent.class);
+      MovementComponent movement = screenBoundEntity.getComponent(MovementComponent.class);
 
       Vector2[] screenCoords = {new Vector2(0,0), new Vector2(SpaceRtsGame.SCENE_WIDTH, 0), new Vector2(SpaceRtsGame.SCENE_WIDTH, SpaceRtsGame.SCENE_HEIGHT), new Vector2(0, SpaceRtsGame.SCENE_HEIGHT)};
       // Collide with bottom wall
