@@ -107,7 +107,7 @@ public class World {
     movement.velocity.set(10, 10);
     movement.acceleration.set(30, 30);
 
-    gunner.reload_progress = SpaceRtsGame.random.nextFloat() * gunner.reload_time;
+    gunner.reloadProgress = SpaceRtsGame.random.nextFloat() * gunner.reloadTime;
 
     entity.add(texture);
     entity.add(transform);

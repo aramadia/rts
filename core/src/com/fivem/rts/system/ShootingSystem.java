@@ -36,12 +36,12 @@ public class ShootingSystem extends IteratingSystem {
     GunnerComponent gunner = gunnerMapper.get(entity);
     TransformComponent transform = transformMapper.get(entity);
 
-    gunner.reload_progress -= deltaTime;
-    if (gunner.reload_progress < 0) {
-      gunner.reload_progress = 0.0f;
+    gunner.reloadProgress -= deltaTime;
+    if (gunner.reloadProgress < 0) {
+      gunner.reloadProgress = 0.0f;
     }
 
-    if (gunner.reload_progress == 0) {
+    if (gunner.reloadProgress == 0) {
       // Shoot a bullet
 
       // TODO wrap in a factory
@@ -51,8 +51,9 @@ public class ShootingSystem extends IteratingSystem {
       BulletComponent bParticle = new BulletComponent();
       BoundsComponent bBounds = new BoundsComponent();
       bTransform.position.set(transform.position);
-      bMovement.velocity.set(gunner.bullet_speed * SpaceRtsGame.random.nextFloat(),
-          gunner.bullet_speed * SpaceRtsGame.random.nextFloat());
+      bMovement.velocity.set(SpaceRtsGame.random.nextFloat() * (1 - (-1)) + (-1), SpaceRtsGame.random.nextFloat() * (1 - (-1)) + (-1));
+      bMovement.velocity.nor();
+      bMovement.velocity.scl(gunner.bulletSpeed);
       bBounds.setBoundsFromRect(bTransform.position.x, bTransform.position.y, bParticle.size, bParticle.size);
       b.add(bTransform);
       b.add(bMovement);
@@ -62,7 +63,7 @@ public class ShootingSystem extends IteratingSystem {
       engine.addEntity(b);
 
       // Reset the bullet counter
-      gunner.reload_progress = gunner.reload_time;
+      gunner.reloadProgress = gunner.reloadTime;
     }
   }
 

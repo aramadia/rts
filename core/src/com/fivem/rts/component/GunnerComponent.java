@@ -9,11 +9,11 @@ import com.badlogic.gdx.math.Rectangle;
  */
 public class GunnerComponent extends Component {
   // The amount of seconds left until reloaded
-  public float reload_progress = 0.0f;
+  public float reloadProgress = 0.0f;
 
   // The amount to reset once the gun shoots
-  public float reload_time = .4f;
+  public float reloadTime = .2f;
 
-  public float bullet_speed = 1400.0f;
+  public float bulletSpeed = 1400.0f;
 
 }
