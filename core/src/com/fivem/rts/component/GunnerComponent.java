@@ -12,8 +12,8 @@ public class GunnerComponent extends Component {
   public float reload_progress = 0.0f;
 
   // The amount to reset once the gun shoots
-  public float reload_time = 2.0f;
+  public float reload_time = .4f;
 
-  public float bullet_speed = 1000.0f;
+  public float bullet_speed = 1400.0f;
 
 }

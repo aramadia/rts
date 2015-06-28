@@ -42,7 +42,7 @@ public class GoogleCommandNetwork implements CommandNetwork {
       return;
     }
     String serializedCommand = json.toJson(command);
-    Gdx.app.log(TAG, "Sending command " + serializedCommand);
+//    Gdx.app.log(TAG, "Sending command " + serializedCommand);
     network.broadcastMessage(serializedCommand.getBytes());
 
     // Since you don't get broadcasted messages, add it to the queue here.

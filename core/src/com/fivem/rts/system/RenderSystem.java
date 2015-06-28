@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Polygon;
@@ -17,7 +18,9 @@ public class RenderSystem extends EntitySystem {
 
   private ImmutableArray<Entity> entities;
   private ImmutableArray<Entity> selectedEntites;
+  private ImmutableArray<Entity> particleEntities;
 
+  private Engine engine;
   private SpriteBatch batch;
   private BitmapFont font;
   private OrthographicCamera camera;
@@ -28,9 +31,10 @@ public class RenderSystem extends EntitySystem {
   private ComponentMapper<TextureComponent> textureMapper = ComponentMapper.getFor(TextureComponent.class);
   private ComponentMapper<TextComponent> textMapper = ComponentMapper.getFor(TextComponent.class);
   private ComponentMapper<BoundsComponent> boundsMapper = ComponentMapper.getFor(BoundsComponent.class);
-  private ComponentMapper<ParticleComponent> particleMapper = ComponentMapper.getFor(ParticleComponent.class);
+  private ComponentMapper<BulletComponent> bulletMapper = ComponentMapper.getFor(BulletComponent.class);
   private ComponentMapper<SelectionComponent> selectedMapper = ComponentMapper.getFor(SelectionComponent.class);
   private ComponentMapper<DestinationComponent> destinationMapper = ComponentMapper.getFor(DestinationComponent.class);
+  private ComponentMapper<ParticleComponent> particleMapper = ComponentMapper.getFor(ParticleComponent.class);
 
   public RenderSystem(OrthographicCamera camera, SpriteBatch spriteBatch) {
     this.batch = spriteBatch;
@@ -39,14 +43,17 @@ public class RenderSystem extends EntitySystem {
     this.font.setColor(Color.RED);
 
     this.shapeRenderer = new ShapeRenderer();
+
   }
 
   @Override
   public void addedToEngine(Engine engine) {
     //noinspection unchecked
+    this.engine = engine;
     entities = engine.getEntitiesFor(Family.all(TransformComponent.class, BoundsComponent.class).get());
     selectedEntites = engine.getEntitiesFor(
         Family.all(TransformComponent.class, BoundsComponent.class, SelectionComponent.class).get());
+    particleEntities = engine.getEntitiesFor(Family.all(ParticleComponent.class).get());
   }
 
   @Override
@@ -101,6 +108,16 @@ public class RenderSystem extends EntitySystem {
       if (text != null && SpaceRtsGame.DEBUG_MODE) {
         font.draw(batch, text.text, x, y);
       }
+
+    }
+
+    for (Entity particleEntity : particleEntities) {
+      ParticleEffect particleEffect = particleMapper.get(particleEntity).particleEffect;
+      particleEffect.draw(batch, deltaTime);
+
+      if (particleEffect.isComplete()) {
+        engine.removeEntity(particleEntity);
+      }
     }
 
     if (SpaceRtsGame.DEBUG_MODE) {
@@ -113,7 +130,7 @@ public class RenderSystem extends EntitySystem {
 
     shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
     for (Entity entity : entities) {
-      ParticleComponent particle = particleMapper.get(entity);
+      BulletComponent particle = bulletMapper.get(entity);
       TransformComponent transform = transformMapper.get(entity);
       DestinationComponent destination = destinationMapper.get(entity);
 

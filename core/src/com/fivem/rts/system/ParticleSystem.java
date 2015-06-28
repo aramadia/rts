@@ -5,17 +5,17 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.fivem.rts.component.ParticleComponent;
+import com.fivem.rts.component.BulletComponent;
 
 public class ParticleSystem extends IteratingSystem {
 
-  private ComponentMapper<ParticleComponent> particleMapper;
+  private ComponentMapper<BulletComponent> particleMapper;
   private Engine engine;
 
   public ParticleSystem() {
-    super(Family.all(ParticleComponent.class).get());
+    super(Family.all(BulletComponent.class).get());
 
-    particleMapper = ComponentMapper.getFor(ParticleComponent.class);
+    particleMapper = ComponentMapper.getFor(BulletComponent.class);
   }
 
   @Override
@@ -26,7 +26,7 @@ public class ParticleSystem extends IteratingSystem {
 
   @Override
   protected void processEntity(Entity entity, float deltaTime) {
-    ParticleComponent particle = particleMapper.get(entity);
+    BulletComponent particle = particleMapper.get(entity);
 
     particle.lifespan -= deltaTime;
     if (particle.lifespan <= 0) {

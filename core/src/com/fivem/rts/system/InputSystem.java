@@ -56,7 +56,7 @@ public class InputSystem extends EntitySystem {
   private void updateAcceleration(int xAcceleration, int yAcceleration) {
     ImmutableArray<Entity> entities =
         engine.getEntitiesFor(Family.all(MovementComponent.class, TransformComponent.class)
-            .exclude(ParticleComponent.class).get());
+            .exclude(BulletComponent.class).get());
 
     for (Entity entity : entities) {
       entity.getComponent(MovementComponent.class).acceleration.set(xAcceleration, yAcceleration);

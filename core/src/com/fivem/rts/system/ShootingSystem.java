@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.Gdx;
 import com.fivem.rts.SpaceRtsGame;
 import com.fivem.rts.component.*;
 
@@ -49,7 +48,7 @@ public class ShootingSystem extends IteratingSystem {
       Entity b = new Entity();
       TransformComponent bTransform = new TransformComponent();
       MovementComponent bMovement = new MovementComponent();
-      ParticleComponent bParticle = new ParticleComponent();
+      BulletComponent bParticle = new BulletComponent();
       BoundsComponent bBounds = new BoundsComponent();
       bTransform.position.set(transform.position);
       bMovement.velocity.set(gunner.bullet_speed * SpaceRtsGame.random.nextFloat(),
