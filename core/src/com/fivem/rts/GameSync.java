@@ -1,5 +1,6 @@
 package com.fivem.rts;
 
+import com.badlogic.gdx.Gdx;
 import com.fivem.rts.command.AckCommand;
 import com.fivem.rts.command.BaseCommand;
 import com.fivem.rts.command.Command;
@@ -32,11 +33,21 @@ import java.util.HashMap;
  * - At the end of every frame, an ack for curFrame+FRAME_DELAY is sent
  */
 public class GameSync {
+  private final static String TAG = GameSync.class.getSimpleName();
+
+
+  //
   private int frame;
-  private final static int FRAME_DELAY = 12;
+
+  private final static int FRAME_DELAY = 6;
   private int acksNeeded = 1;
 
+  // Commands buffered after start is called
+  private ArrayList<Command> cachedCommands = new ArrayList<Command>();
+
   private HashMap<Integer, CommandBuffer> commandBuffer = new HashMap<Integer, CommandBuffer>();
+
+  private int logOnceFrame = 0;
 
   class CommandBuffer {
     // Frame these commands should execute
@@ -45,13 +56,14 @@ public class GameSync {
     ArrayList<Command> commands = new ArrayList<Command>();
 
     // Number of clients acknowledged for this command
-    int acknowledged;
+    int acknowledged = 0;
   }
 
   public void reset(int acksNeeded) {
     this.acksNeeded = acksNeeded;
     commandBuffer.clear();
     frame = 0;
+    Gdx.app.log(TAG, "reset GameSync");
   }
 
   public int getFrame() {
@@ -90,29 +102,35 @@ public class GameSync {
    */
   public ArrayList<Command> startFrame(ArrayList<Command> incoming) {
 
+    // Prepend incoming with cachedCommands
+    // TODO don't ask, but it works
+    cachedCommands.addAll(incoming);
+    incoming = cachedCommands;
+    cachedCommands = new ArrayList<Command>();
+
     ArrayList<Command> outCommands = new ArrayList<Command>();
 
-    for (Command command: incoming) {
+    for (int i = 0; i < incoming.size(); i++) {
+      Command command = incoming.get(i);
       BaseCommand cmd = command.getCommand();
 
       // Handle start specially
       if (command.type == Command.Type.START) {
         outCommands.add(command);
+        for (int j = i + 1; j < incoming.size(); j++) {
+          cachedCommands.add(incoming.get(j));
+        }
         return outCommands;
       }
 
       // Handle ack types here
       if (command.type == Command.Type.ACK) {
         AckCommand ack = (AckCommand)cmd;
-        CommandBuffer buf =getOrCreateCommandBuffer(ack.frameReady);
+        CommandBuffer buf = getOrCreateCommandBuffer(ack.frameReady);
         buf.acknowledged++;
       }
 
-
-
       // TODO Forward unsynchornized commands immediately?
-
-
       CommandBuffer buf = getOrCreateCommandBuffer(cmd.syncTime);
       buf.commands.add(command);
 
@@ -128,16 +146,25 @@ public class GameSync {
 
     // No commands to execute thats ok, no acks were sent yet
     if (buf == null) {
+      if (frame != logOnceFrame) {
+        Gdx.app.log(TAG, "No CommandBuffer for frame " + frame);
+        logOnceFrame = frame;
+      }
       return null;
     }
 
     // If everyone acknowledge this frame, execute these commands
-    if (buf.acknowledged == acksNeeded) {
+    // TODO figure out why we are getting multiple acks for the same frame.  (Messaging is unreliable)
+    if (buf.acknowledged >= acksNeeded) {
       outCommands.addAll(buf.commands);
       commandBuffer.remove(frame);
       return outCommands;
     }
 
+    if (frame != logOnceFrame) {
+      Gdx.app.log(TAG, "CommandBuffer " + frame + " has " + buf.acknowledged + " acks");
+      logOnceFrame = frame;
+    }
     return null;
   }
 

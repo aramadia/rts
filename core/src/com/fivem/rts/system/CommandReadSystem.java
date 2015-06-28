@@ -27,6 +27,7 @@ public class CommandReadSystem extends EntitySystem {
   private final GameSync sync;
   private Engine engine;
   private boolean isWorldProcessing = true;
+  private boolean resetWorldNextIteration = false;
 
   public CommandReadSystem(CommandNetwork commandNetwork, GameSync sync) {
     this.commandNetwork = commandNetwork;
@@ -43,7 +44,13 @@ public class CommandReadSystem extends EntitySystem {
       return;
     }
 
-    Gdx.app.log(TAG, "Processing World: " + processing + "frame: " + sync.getFrame());
+    if (processing == false) {
+      Gdx.app.log(TAG, "STOP processing, blocked at frame: " + sync.getFrame());
+    } else {
+      Gdx.app.log(TAG, "CONTINUE world at frame: " + sync.getFrame());
+    }
+
+
     isWorldProcessing = processing;
 
     // These systems actually affect the world entities
@@ -64,7 +71,14 @@ public class CommandReadSystem extends EntitySystem {
 
   @Override
   public void update(float deltaTime) {
-    // TODO take time into account
+
+    // Required because you can't remove all entities, and add entities in the same iteration
+    // (RemoveAll is a post operation)
+    if (resetWorldNextIteration) {
+      SpaceRtsGame.world.resetWorld(engine);
+      resetWorldNextIteration = false;
+      return;
+    }
 
     ArrayList<Command> commands = commandNetwork.receiveCommands();
 
@@ -90,7 +104,7 @@ public class CommandReadSystem extends EntitySystem {
           SpaceRtsGame.gameStatus = "Received Start Game.. Reinit world";
           sync.reset(SpaceRtsGame.NUM_PLAYERS);
           engine.removeAllEntities();
-          SpaceRtsGame.world.resetWorld(engine);
+          resetWorldNextIteration = true;
           setWorldProcessing(false);
           break;
         case ACK:
@@ -119,7 +133,7 @@ public class CommandReadSystem extends EntitySystem {
           break;
 
         default:
-          Gdx.app.log(TAG, "Processing Unknown command " + command);
+          Gdx.app.error(TAG, "Processing Unknown command " + command);
 
       }
     }

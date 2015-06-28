@@ -21,7 +21,7 @@ import java.util.List;
 
 
 public class AndroidLauncher extends AndroidApplication implements GoogleServicesInterface, RoomUpdateListener,
-        RealTimeMessageReceivedListener {
+        RealTimeMessageReceivedListener, RealTimeMultiplayer.ReliableMessageSentCallback {
 
   private static final String TAG = AndroidLauncher.class.getSimpleName();
   GameHelper gameHelper;
@@ -196,18 +196,19 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
     return googleRoom;
   }
 
+  // Synchronize access to queuedMessages
   @Override
-  public void onRealTimeMessageReceived(RealTimeMessage rtm) {
+  public synchronized void onRealTimeMessageReceived(RealTimeMessage rtm) {
     Message msg = new Message();
     msg.playerId = rtm.getSenderParticipantId();
     msg.message = rtm.getMessageData();
 
     queuedMessages.add(msg);
-
   }
 
+  // Synchronize access to queuedMessages
   @Override
-  public List<Message> receiveMessages() {
+  public synchronized List<Message> receiveMessages() {
     ArrayList<Message> temp = new ArrayList<>(queuedMessages);
     queuedMessages.clear();
     return temp;
@@ -216,11 +217,18 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
   @Override
   public void broadcastMessage(byte[] message) {
     for (Participant p : participants) {
-//      if (!p.getParticipantId().equals(myParticipantId)) {
+      if (!p.getParticipantId().equals(myParticipantId)) {
 //        Gdx.app.log(TAG, myParticipantId + " sending to " + p.getParticipantId());
-        Games.RealTimeMultiplayer.sendReliableMessage(gameHelper.getApiClient(), null, message,
+         Games.RealTimeMultiplayer.sendReliableMessage(gameHelper.getApiClient(), this, message,
             roomId, p.getParticipantId());
-//      }
+      }
+    }
+  }
+
+  @Override
+  public void onRealTimeMessageSent(int statusCode, int tokenId, String recipientParticipantId) {
+    if (statusCode != GamesStatusCodes.STATUS_OK) {
+      Gdx.app.error(TAG, "Failed to send message " + statusCode);
     }
   }
 
@@ -272,5 +280,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
       ConsoleSystem.error(tag, message, exception);
     }
   }
+
+
 }
 
