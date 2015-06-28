@@ -34,7 +34,8 @@ public class SpaceRtsGame extends ApplicationAdapter {
   // easily when we need to increase the player count
   public static final int NUM_PLAYERS = 2;
 
-
+  // Run the game and render loop at a fix frequency
+  private static final float GAME_TICK_DURATION = 1.f/60.f;
 
   private OrthographicCamera camera;
   private OrthographicCamera cameraHud;
@@ -118,7 +119,7 @@ public class SpaceRtsGame extends ApplicationAdapter {
     Gdx.gl.glClearColor(0, 0, 0, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-    ashleyEngine.update(Gdx.graphics.getDeltaTime());
+    ashleyEngine.update(GAME_TICK_DURATION);
   }
 
   @Override

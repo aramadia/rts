@@ -16,10 +16,7 @@ import java.util.List;
 public class HashingSystem extends EntitySystem {
 
   private Engine engine;
-
   private final List<ComponentMapper> hashMappers;
-
-
 
   public HashingSystem() {
     hashMappers = new ArrayList<ComponentMapper>();
@@ -43,8 +40,6 @@ public class HashingSystem extends EntitySystem {
     super.addedToEngine(engine);
     this.engine = engine;
   }
-
-
 
   @Override
   public void update(float deltaTime) {
