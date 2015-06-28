@@ -52,8 +52,10 @@ public class RenderSystem extends EntitySystem {
     this.engine = engine;
     entities = engine.getEntitiesFor(Family.all(TransformComponent.class, BoundsComponent.class).get());
     selectedEntites = engine.getEntitiesFor(
+
         Family.all(TransformComponent.class, BoundsComponent.class, SelectionComponent.class).get());
     particleEntities = engine.getEntitiesFor(Family.all(ParticleComponent.class).get());
+
   }
 
   @Override
@@ -120,8 +122,13 @@ public class RenderSystem extends EntitySystem {
       }
     }
 
-    if (SpaceRtsGame.DEBUG_MODE) {
-      font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 10, SpaceRtsGame.SCENE_HEIGHT - 10);
+    if (SpaceRtsGame.DRAW_STATUS) {
+      // Need the extra space at the end so it doesn't get cut off.
+
+      font.draw(batch,  Gdx.graphics.getFramesPerSecond()+ " FPS ", SpaceRtsGame.SCENE_WIDTH - 80, SpaceRtsGame.SCENE_HEIGHT - 10);
+      font.draw(batch, engine.getEntities().size() + " entities " , SpaceRtsGame.SCENE_WIDTH - 80, SpaceRtsGame.SCENE_HEIGHT - 30);
+      font.draw(batch, "Status: " + SpaceRtsGame.gameStatus + " ",  SpaceRtsGame.SCENE_WIDTH/2 - 40, SpaceRtsGame.SCENE_HEIGHT - 10);
+      font.draw(batch, "Frame: " + SpaceRtsGame.sync.getFrame() + " ", SpaceRtsGame.SCENE_WIDTH/2 - 40, SpaceRtsGame.SCENE_HEIGHT - 30);
     }
 
     batch.end();

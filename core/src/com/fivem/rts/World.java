@@ -31,6 +31,8 @@ public class World {
   }
 
   public void resetWorld(Engine engine) {
+    SpaceRtsGame.random.setSeed(1337);
+
     for (int i = 0; i < 1; i++) {
       engine.addEntity(createSmileyEntity(i));
     }

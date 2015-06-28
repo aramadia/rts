@@ -54,6 +54,10 @@ public class GameSync {
     frame = 0;
   }
 
+  public int getFrame() {
+    return frame;
+  }
+
 
   /**
    * Create an ack packet to send to indicate this frame is over

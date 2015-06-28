@@ -21,6 +21,12 @@ public class SpaceRtsGame extends ApplicationAdapter {
   // TODO this shit should be moved somewhere
   public static boolean DEBUG_MODE = false;
 
+  // Draw fps, frame counter and status
+  public static boolean DRAW_STATUS = true;
+
+  // Global status string used for debugging only
+  public static String gameStatus = "Local";
+
   public static final float SCENE_WIDTH = 1280;
   public static final float SCENE_HEIGHT = 720;
 
@@ -42,8 +48,10 @@ public class SpaceRtsGame extends ApplicationAdapter {
   private CommandNetwork commandNetwork;
 
   private SpriteBatch spriteBatch;
+
+  // TODO Consider removing the static
   public static World world;
-  private GameSync sync;
+  public static GameSync sync;
 
   public SpaceRtsGame(GoogleServicesInterface googleServicesInterface){
     this.googleServicesInterface = googleServicesInterface;

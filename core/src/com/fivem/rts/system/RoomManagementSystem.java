@@ -46,6 +46,7 @@ public class RoomManagementSystem extends EntitySystem {
 
     if (googleRoom != googleServicesInterface.connected()) {
       Gdx.app.log(TAG, "Connected, sending start command");
+      SpaceRtsGame.gameStatus = "Connected to Room";
       StartCommand start = new StartCommand();
       Command cmd = new Command();
       cmd.startCommand = start;

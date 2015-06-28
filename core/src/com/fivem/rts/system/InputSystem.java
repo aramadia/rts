@@ -21,6 +21,7 @@ import com.fivem.rts.network.CommandNetwork;
 public class InputSystem extends EntitySystem {
 
   private static final int ACCELERATION = 200;
+  private static final String TAG = InputSystem.class.getSimpleName();
 
   private final OrthographicCamera camera;
   private final CommandNetwork commandNetwork;
@@ -150,12 +151,19 @@ public class InputSystem extends EntitySystem {
 
     @Override
     public boolean longPress(float x, float y) {
-      ConsoleSystem.CONSOLE_ENABLED = !ConsoleSystem.CONSOLE_ENABLED;
+      SpaceRtsGame.DEBUG_MODE = !SpaceRtsGame.DEBUG_MODE;
       return true;
     }
 
     @Override
     public boolean fling(float velocityX, float velocityY, int button) {
+      if (velocityX > 2000) {
+        ConsoleSystem.CONSOLE_ENABLED = true;
+        return true;
+      } else if (velocityX < 2000) {
+        ConsoleSystem.CONSOLE_ENABLED = false;
+        return true;
+      }
       return false;
     }
 
