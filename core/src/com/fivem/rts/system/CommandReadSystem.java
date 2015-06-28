@@ -26,6 +26,7 @@ public class CommandReadSystem extends EntitySystem {
   private final CommandNetwork commandNetwork;
   private final GameSync sync;
   private Engine engine;
+  private boolean isWorldProcessing = true;
 
   public CommandReadSystem(CommandNetwork commandNetwork, GameSync sync) {
     this.commandNetwork = commandNetwork;
@@ -38,16 +39,27 @@ public class CommandReadSystem extends EntitySystem {
   }
 
   private void setWorldProcessing(boolean processing) {
+    if (processing == isWorldProcessing) {
+      return;
+    }
+
+    Gdx.app.log(TAG, "Processing World: " + processing + "frame: " + sync.getFrame());
+    isWorldProcessing = processing;
+
     // These systems actually affect the world entities
     MovementSystem movementSystem = engine.getSystem(MovementSystem.class);
     ParticleSystem particleSystem = engine.getSystem(ParticleSystem.class);
     CollisionSystem collisionSystem = engine.getSystem(CollisionSystem.class);
     ShootingSystem shootingSystem = engine.getSystem(ShootingSystem.class);
 
+    // Stop this class because it sends the ack frames (and calls finishFrame()
+    CommandWriteSystem commandWriteSystem = engine.getSystem(CommandWriteSystem.class);
+
     movementSystem.setProcessing(processing);
     particleSystem.setProcessing(processing);
     collisionSystem.setProcessing(processing);
     shootingSystem.setProcessing(processing);
+    commandWriteSystem.setProcessing(processing);
   }
 
   @Override
@@ -75,7 +87,7 @@ public class CommandReadSystem extends EntitySystem {
 
       switch(command.type) {
         case START:
-          SpaceRtsGame.gameStatus = "Starting Game";
+          SpaceRtsGame.gameStatus = "Received Start Game.. Reinit world";
           sync.reset(SpaceRtsGame.NUM_PLAYERS);
           engine.removeAllEntities();
           SpaceRtsGame.world.resetWorld(engine);

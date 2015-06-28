@@ -44,12 +44,13 @@ public class RoomManagementSystem extends EntitySystem {
   @Override
   public void update(float deltaTime) {
 
-    if (googleRoom != googleServicesInterface.connected()) {
+    GoogleServicesInterface.GoogleRoom newRoom =  googleServicesInterface.connected();
+    if (googleRoom != newRoom) {
       Gdx.app.log(TAG, "Connected, sending start command");
       SpaceRtsGame.gameStatus = "Connected to Room";
       StartCommand start = new StartCommand();
       commandNetwork.sendCommand(Command.startCommand(start));
-
+      googleRoom = newRoom;
     }
   }
 }

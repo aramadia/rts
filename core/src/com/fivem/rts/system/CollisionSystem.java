@@ -23,6 +23,14 @@ public class CollisionSystem extends EntitySystem {
     super();
   }
 
+  // Moved here from update loop because it was causing too many allocations.
+  Vector2[] screenCoords = {
+      new Vector2(0, 0),
+      new Vector2(SpaceRtsGame.SCENE_WIDTH, 0),
+      new Vector2(SpaceRtsGame.SCENE_WIDTH, SpaceRtsGame.SCENE_HEIGHT),
+      new Vector2(0, SpaceRtsGame.SCENE_HEIGHT)
+  };
+
   @Override
   public void addedToEngine(Engine engine) {
     this.engine = engine;
@@ -39,12 +47,7 @@ public class CollisionSystem extends EntitySystem {
       BoundsComponent bounds = screenBoundEntity.getComponent(BoundsComponent.class);
       MovementComponent movement = screenBoundEntity.getComponent(MovementComponent.class);
 
-      Vector2[] screenCoords = {
-          new Vector2(0, 0),
-          new Vector2(SpaceRtsGame.SCENE_WIDTH, 0),
-          new Vector2(SpaceRtsGame.SCENE_WIDTH, SpaceRtsGame.SCENE_HEIGHT),
-          new Vector2(0, SpaceRtsGame.SCENE_HEIGHT)
-      };
+
 
       // Collide with bottom wall
       if (movement.velocity.y < 0 && Intersector.intersectSegmentPolygon(screenCoords[0], screenCoords[1], bounds.polygon)) {

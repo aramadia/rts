@@ -135,7 +135,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
       Gdx.app.error(TAG, "onRoomConnected" + statusCode);
     }
 
-    Gdx.app.log(TAG, "Starting game with room " + room.getRoomId());
+    Gdx.app.log(TAG, "onRoomConnected: Starting game with room " + room.getRoomId());
 
 
     roomId = room.getRoomId();
@@ -217,7 +217,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleService
   public void broadcastMessage(byte[] message) {
     for (Participant p : participants) {
 //      if (!p.getParticipantId().equals(myParticipantId)) {
-        Gdx.app.log(TAG, myParticipantId + " sending to " + p.getParticipantId());
+//        Gdx.app.log(TAG, myParticipantId + " sending to " + p.getParticipantId());
         Games.RealTimeMultiplayer.sendReliableMessage(gameHelper.getApiClient(), null, message,
             roomId, p.getParticipantId());
 //      }

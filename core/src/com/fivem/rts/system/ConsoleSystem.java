@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.fivem.rts.SpaceRtsGame;
 
 public class ConsoleSystem extends EntitySystem {
 
@@ -104,6 +105,8 @@ public class ConsoleSystem extends EntitySystem {
   }
 
   public static void error(String tag, String message, Throwable exception) {
+    // Display error status
+    SpaceRtsGame.gameStatus = "ERROR: " + tag + ": " +  message;
     logEntries.add(new LogEntry(LogLevel.ERROR, tag, message, exception));
   }
 

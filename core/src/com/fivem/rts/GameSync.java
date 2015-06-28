@@ -60,7 +60,8 @@ public class GameSync {
 
 
   /**
-   * Create an ack packet to send to indicate this frame is over
+   * Create an ack packet to send to indicate this frame is over.
+   * However, this shoudln't be called if the startFrame is blocking
    */
   public Command finishFrame() {
     AckCommand ack = new AckCommand();
@@ -94,6 +95,12 @@ public class GameSync {
     for (Command command: incoming) {
       BaseCommand cmd = command.getCommand();
 
+      // Handle start specially
+      if (command.type == Command.Type.START) {
+        outCommands.add(command);
+        return outCommands;
+      }
+
       // Handle ack types here
       if (command.type == Command.Type.ACK) {
         AckCommand ack = (AckCommand)cmd;
@@ -101,7 +108,11 @@ public class GameSync {
         buf.acknowledged++;
       }
 
-      // Forward unsynchornized commands immediately
+
+
+      // TODO Forward unsynchornized commands immediately?
+
+
       CommandBuffer buf = getOrCreateCommandBuffer(cmd.syncTime);
       buf.commands.add(command);
 

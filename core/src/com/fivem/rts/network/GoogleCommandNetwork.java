@@ -27,6 +27,10 @@ public class GoogleCommandNetwork implements CommandNetwork {
     List<GoogleServicesInterface.Message> messages = network.receiveMessages();
 
     for (GoogleServicesInterface.Message m: messages) {
+      if (m.message == null) {
+        Gdx.app.error(TAG, "Null message received");
+        continue;
+      }
       String s = new String(m.message);
       queuedCommands.add(json.fromJson(Command.class, s));
     }
