@@ -67,4 +67,9 @@ public class ConsoleSystem extends EntitySystem {
     logs.add(message);
   }
 
+  public static void addLog(String tag, String message, Throwable exception) {
+    logs.add(message);
+    // TODO print exception
+  }
+
 }

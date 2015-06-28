@@ -112,7 +112,7 @@ public class CollisionSystem extends EntitySystem {
 
     if (zombieComponent.health <= 0) {
       // kill the zombie
-      Gdx.app.log(TAG, zombieTextComponent.text + " was killed.");
+      Gdx.app.debug(TAG, zombieTextComponent.text + " was killed.");
       engine.removeEntity(zombie);
       engine.addEntity(createBloodEntity(zombie));
     }
