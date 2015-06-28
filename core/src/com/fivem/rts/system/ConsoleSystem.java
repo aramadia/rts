@@ -73,7 +73,7 @@ public class ConsoleSystem extends EntitySystem {
     table.clear();
     table.add(new Label("CONSOLE", titleStyle)).expandX().fillX().top().left().padLeft(4).row();
     for (LogEntry logEntry : logEntries) {
-      table.add(new Label(logEntry.message, logEntry.logLevel.style)).expandX().fillX().top().left().padLeft(4).row();
+      table.add(new Label(logEntry.message, logEntry.logLevel.getStyle())).expandX().fillX().top().left().padLeft(4).row();
     }
 
     scrollPane.validate();
