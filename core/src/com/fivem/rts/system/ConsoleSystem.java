@@ -46,13 +46,14 @@ public class ConsoleSystem extends EntitySystem {
   }
 
   private static float getFontScale() {
-    float density = Gdx.app.getGraphics().getDensity();
-    if (density < 1) {
-      density = 1;
-    }
+    int screenWidth = Gdx.graphics.getWidth();
+    int screenHeight = Gdx.graphics.getHeight();
 
-    Gdx.app.log(TAG, "Font density " + 1/density);
-    return 1/density;
+    float fontXScale = SpaceRtsGame.SCENE_WIDTH / screenWidth;
+    float fontYScale = SpaceRtsGame.SCENE_HEIGHT / screenHeight;
+
+    // Just use X for now since different x/y scaling looks terrible
+    return fontXScale;
   }
 
   private final Stage stage;

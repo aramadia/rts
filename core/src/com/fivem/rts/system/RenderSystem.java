@@ -41,6 +41,7 @@ public class RenderSystem extends EntitySystem {
     this.camera = camera;
     this.font = new BitmapFont();
     this.font.setColor(Color.RED);
+    this.font.getData().setScale(getFontScale());
 
     this.shapeRenderer = new ShapeRenderer();
 
@@ -200,5 +201,17 @@ public class RenderSystem extends EntitySystem {
         shapeRenderer.line(x1, y1, x2, y2);
       }
     }
+  }
+
+  // TODO copied from Console system
+  private static float getFontScale() {
+    int screenWidth = Gdx.graphics.getWidth();
+    int screenHeight = Gdx.graphics.getHeight();
+
+    float fontXScale = SpaceRtsGame.SCENE_WIDTH / screenWidth;
+    float fontYScale = SpaceRtsGame.SCENE_HEIGHT / screenHeight;
+
+    // Just use X for now since different x/y scaling looks terrible
+    return fontXScale;
   }
 }
