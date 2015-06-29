@@ -4,12 +4,10 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.fivem.rts.GameSync;
 import com.fivem.rts.SpaceRtsGame;
-import com.fivem.rts.World;
 import com.fivem.rts.command.AckCommand;
 import com.fivem.rts.command.Command;
 import com.fivem.rts.command.MoveCommand;
@@ -45,9 +43,9 @@ public class CommandReadSystem extends EntitySystem {
     }
 
     if (processing == false) {
-      Gdx.app.log(TAG, "STOP processing, blocked at frame: " + sync.getFrame());
+      Gdx.app.log(TAG, "STOP processing, blocked at frame: " + sync.getCurFrame());
     } else {
-      Gdx.app.log(TAG, "CONTINUE world at frame: " + sync.getFrame());
+      Gdx.app.log(TAG, "CONTINUE world at frame: " + sync.getCurFrame());
     }
 
 
@@ -58,6 +56,7 @@ public class CommandReadSystem extends EntitySystem {
     ParticleSystem particleSystem = engine.getSystem(ParticleSystem.class);
     CollisionSystem collisionSystem = engine.getSystem(CollisionSystem.class);
     ShootingSystem shootingSystem = engine.getSystem(ShootingSystem.class);
+    AiSystem aiSystem = engine.getSystem(AiSystem.class);
 
     // Stop this class because it sends the ack frames (and calls finishFrame()
     CommandWriteSystem commandWriteSystem = engine.getSystem(CommandWriteSystem.class);
@@ -66,6 +65,7 @@ public class CommandReadSystem extends EntitySystem {
     particleSystem.setProcessing(processing);
     collisionSystem.setProcessing(processing);
     shootingSystem.setProcessing(processing);
+    aiSystem.setProcessing(processing);
     commandWriteSystem.setProcessing(processing);
   }
 
@@ -106,9 +106,6 @@ public class CommandReadSystem extends EntitySystem {
           engine.removeAllEntities();
           resetWorldNextIteration = true;
           setWorldProcessing(false);
-          break;
-        case ACK:
-          AckCommand ack = command.ackCommand;
           break;
 
         case MOVE:

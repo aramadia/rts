@@ -129,7 +129,7 @@ public class RenderSystem extends EntitySystem {
       font.draw(batch,  Gdx.graphics.getFramesPerSecond()+ " FPS ", SpaceRtsGame.SCENE_WIDTH - 80, SpaceRtsGame.SCENE_HEIGHT - 10);
       font.draw(batch, engine.getEntities().size() + " entities " , SpaceRtsGame.SCENE_WIDTH - 80, SpaceRtsGame.SCENE_HEIGHT - 30);
       font.draw(batch, "Status: " + SpaceRtsGame.gameStatus + " ",  SpaceRtsGame.SCENE_WIDTH/2 - 40, SpaceRtsGame.SCENE_HEIGHT - 10);
-      font.draw(batch, "Frame: " + SpaceRtsGame.sync.getFrame() + " ", SpaceRtsGame.SCENE_WIDTH/2 - 40, SpaceRtsGame.SCENE_HEIGHT - 30);
+      font.draw(batch, "Frame: " + SpaceRtsGame.sync.getCurFrame() + " ", SpaceRtsGame.SCENE_WIDTH/2 - 40, SpaceRtsGame.SCENE_HEIGHT - 30);
     }
 
     batch.end();

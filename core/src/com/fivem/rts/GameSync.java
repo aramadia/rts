@@ -24,27 +24,35 @@ import java.util.HashMap;
  *
  * == Wait until NUM_PLAYERS Start is sent
  * - Official game start
- * - Reset gameSync frame counter
+ * - Reset gameSync curFrame counter
  * - Reset world so everyone has the same f0 world (reset random too)
  *
  * == Normal Game operation
  * - Commands get queued by GameSync, when the required acks for curFrame is accumulated, the commands are forwarded.
  * - All commands are sent with curFrame+FRAME_DELAY
- * - At the end of every frame, an ack for curFrame+FRAME_DELAY is sent
+ * - At the end of every curFrame, an ack for curFrame+FRAME_DELAY is sent
+ *
+ * Sync Frames,
+ * syncFrame 0, maps to curFrame 0 - 4
  */
 public class GameSync {
   private final static String TAG = GameSync.class.getSimpleName();
 
-
   //
-  private int frame;
+  private int curFrame;
 
-  private final static int FRAME_DELAY = 6;
+  private final static int FRAME_DELAY = 15;
+
+  // All commands get snapped to the next sync interval.
+  // This way acks are sent every 5th curFrame.
+  private final int SYNC_INTERVAL = 15;
+
   private int acksNeeded = 1;
 
   // Commands buffered after start is called
   private ArrayList<Command> cachedCommands = new ArrayList<Command>();
 
+  // Maps currentFrames to command buffers
   private HashMap<Integer, CommandBuffer> commandBuffer = new HashMap<Integer, CommandBuffer>();
 
   private int logOnceFrame = 0;
@@ -64,32 +72,44 @@ public class GameSync {
   public void reset(int acksNeeded) {
     this.acksNeeded = acksNeeded;
     commandBuffer.clear();
-    frame = 0;
+    curFrame = 0;
     Gdx.app.log(TAG, "reset GameSync");
   }
 
-  public int getFrame() {
-    return frame;
+  public int getCurFrame() {
+    return curFrame;
   }
 
   public void setHash(int hashCode) {
-    //  THe current frame has this hashCode
-    Gdx.app.debug(TAG, "Frame: " + frame + " Hash: " + hashCode);
+    //  THe current curFrame has this hashCode
+    Gdx.app.debug(TAG, "Frame: " + curFrame + " Hash: " + hashCode);
   }
 
   /**
-   * Create an ack packet to send to indicate this frame is over.
+   * Create an ack packet to send to indicate this curFrame is over.
    * However, this shoudln't be called if the startFrame is blocking
+   * @return Command to send, or null if there is no command
    */
   public Command finishFrame() {
-    AckCommand ack = new AckCommand();
-    ack.frameReady = frame + FRAME_DELAY;
 
-    frame++;
+
+    if (curFrame % SYNC_INTERVAL != 0) {
+      curFrame++;
+      return null;
+    }
+
+    AckCommand ack = new AckCommand();
+    ack.frameReady = getSyncFrame(curFrame);
+    curFrame++;
+
     return Command.ackCommand(ack);
   }
 
   private CommandBuffer getOrCreateCommandBuffer(int frame) {
+    if (frame % SYNC_INTERVAL != 0) {
+      Gdx.app.error(TAG, "getOrCreate unsynced frame " + frame);
+    }
+
     CommandBuffer buf = commandBuffer.get(frame);
 
     if (buf == null) {
@@ -102,7 +122,8 @@ public class GameSync {
 
   /**
    * GameSync incoming commands from the network, return commands that should
-   * be executing on this frame
+   * be executing on this curFrame.
+   * On an unsync frame, we buffer commands but don't do anything special with them.
    * @param incoming
    * @return A list of commands to execute, or null if the game should freeze
    */
@@ -129,11 +150,12 @@ public class GameSync {
         return outCommands;
       }
 
-      // Handle ack types here
+      // Handle ack types here, do not forward them out
       if (command.type == Command.Type.ACK) {
         AckCommand ack = (AckCommand)cmd;
         CommandBuffer buf = getOrCreateCommandBuffer(ack.frameReady);
         buf.acknowledged++;
+        continue;
       }
 
       // TODO Forward unsynchornized commands immediately?
@@ -143,43 +165,58 @@ public class GameSync {
     }
 
     // Priming the sync manager, all frames < FRAME_DELAY should be free
-    if (frame < FRAME_DELAY) {
+    if (curFrame < FRAME_DELAY) {
       return new ArrayList<Command>();
     }
 
-    // Get current frame
-    CommandBuffer buf = commandBuffer.get(frame);
+    if (curFrame % SYNC_INTERVAL != 0) {
+      return new ArrayList<Command>();
+    }
+
+    // Get current curFrame
+    CommandBuffer buf = commandBuffer.get(curFrame);
 
     // No commands to execute thats ok, no acks were sent yet
     if (buf == null) {
-      if (frame != logOnceFrame) {
-        Gdx.app.log(TAG, "No CommandBuffer for frame " + frame);
-        logOnceFrame = frame;
+      if (curFrame != logOnceFrame) {
+        Gdx.app.log(TAG, "No CommandBuffer for curFrame " + curFrame);
+        logOnceFrame = curFrame;
       }
       return null;
     }
 
-    // If everyone acknowledge this frame, execute these commands
-    // TODO figure out why we are getting multiple acks for the same frame.  (Messaging is unreliable)
+    // If everyone acknowledge this curFrame, execute these commands
+    // TODO figure out why we are getting multiple acks for the same curFrame.  (Messaging is unreliable)
     if (buf.acknowledged >= acksNeeded) {
       outCommands.addAll(buf.commands);
-      commandBuffer.remove(frame);
+      commandBuffer.remove(curFrame);
       return outCommands;
     }
 
-    if (frame != logOnceFrame) {
-      Gdx.app.log(TAG, "CommandBuffer " + frame + " has " + buf.acknowledged + " acks");
-      logOnceFrame = frame;
+    if (curFrame != logOnceFrame) {
+      Gdx.app.log(TAG, "CommandBuffer " + curFrame + " has " + buf.acknowledged + " acks");
+      logOnceFrame = curFrame;
     }
     return null;
   }
 
   /**
-   * Synchronizes a command to run at a certain frame.
+   * The command will run at (frame + FRAME_DELAY) rounded up the nearest SYNC_INTERVAL
+   * @param frame
+   * @return
+   */
+  public int getSyncFrame(int frame) {
+    return (frame + FRAME_DELAY + SYNC_INTERVAL - 1)/ SYNC_INTERVAL * SYNC_INTERVAL;
+  }
+
+  /**
+   * Synchronizes commands to run in the future
    * @param c
    */
   public Command synchronizeCommand(Command c) {
-    c.getCommand().syncTime = frame + FRAME_DELAY;
+    // 3 rounds to 5, 5 == 5, 9 == 10
+    int syncFrame =  getSyncFrame(curFrame);
+    c.getCommand().syncTime = syncFrame;
     return c;
   }
 }

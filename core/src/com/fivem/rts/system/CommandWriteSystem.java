@@ -37,6 +37,8 @@ public class CommandWriteSystem extends EntitySystem {
   @Override
   public void update(float deltaTime) {
     Command ack = sync.finishFrame();
-    commandNetwork.sendCommand(ack);
+    if (ack != null) {
+      commandNetwork.sendCommand(ack);
+    }
   }
 }
