@@ -12,6 +12,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.fivem.rts.SpaceRtsGame;
 
+import java.util.Iterator;
+
 public class ConsoleSystem extends EntitySystem {
 
   private static final String TAG = ConsoleSystem.class.getSimpleName();
@@ -49,8 +51,8 @@ public class ConsoleSystem extends EntitySystem {
       density = 1;
     }
 
-    Gdx.app.log(TAG, "Font density " + density);
-    return density;
+    Gdx.app.log(TAG, "Font density " + 1/density);
+    return 1/density;
   }
 
   private final Stage stage;
@@ -58,6 +60,7 @@ public class ConsoleSystem extends EntitySystem {
   private BitmapFont font;
   private ScrollPane scrollPane;
   private Table table;
+  private int tableEntryIndex = 0;
 
   public ConsoleSystem(Viewport viewport) {
     this.stage = new Stage(viewport);
@@ -67,6 +70,7 @@ public class ConsoleSystem extends EntitySystem {
 
     titleStyle = new Label.LabelStyle(font, Color.BLUE);
     table = new Table();
+    table.add(new Label("CONSOLE", titleStyle)).expandX().fillX().top().left().padLeft(4).row();
 
     ScrollPane.ScrollPaneStyle sps = new ScrollPane.ScrollPaneStyle();
 
@@ -87,10 +91,11 @@ public class ConsoleSystem extends EntitySystem {
     }
 
     // TODO print exception
-    table.clear();
-    table.add(new Label("CONSOLE", titleStyle)).expandX().fillX().top().left().padLeft(4).row();
-    for (LogEntry logEntry : logEntries) {
+    LogEntry logEntry;
+    for (; tableEntryIndex < logEntries.size; tableEntryIndex++) {
+      logEntry = logEntries.get(tableEntryIndex);
       table.add(new Label(logEntry.message, logEntry.logLevel.getStyle())).expandX().fillX().top().left().padLeft(4).row();
+      tableEntryIndex++;
     }
 
     scrollPane.validate();
