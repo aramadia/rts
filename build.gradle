@@ -15,7 +15,7 @@ allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
 
-    version = '1.0'
+    version = '1.0.0'
     ext {
         appName = 'space-rts'
         gdxVersion = '1.6.2'
